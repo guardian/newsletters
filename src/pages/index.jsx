@@ -1,20 +1,17 @@
-/* eslint-disable react/jsx-key */
-import type { NextPage } from 'next'
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css';
 import { getNewsletters } from '../lib/newsletters'
 import { headline } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
-import { ReactNode, useMemo } from 'react'
 import { Newsletter } from '../types/newsletters'
 
 const h1 = css`
     ${headline.medium()};
 `;
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps = async () => {
   const newsletters = await getNewsletters()
   return {
     props: {
@@ -23,13 +20,10 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-type Props = {
-  children?: ReactNode;
-  newsletters: Newsletter[];
-};
-
-const Home: NextPage<Props> = ({newsletters}) => {
- 
+/**
+ * @param {{newsletters: Newsletter[]}} props
+ */
+const Home = ({newsletters}) => {
   return (
     <div className={styles.container}>
       <Head>
