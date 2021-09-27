@@ -1,16 +1,18 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { Newsletter } from '../../types/newsletters'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-
+/**
+ * @param {NextApiRequest} _
+ * @param {NextApiResponse} res
+ */
 export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Array<Newsletter>>
+  _,
+  res
 ) {
   res.status(200).json(getSheetsNewsletters())
 }
 
-const getSheetsNewsletters = () : Array<Newsletter> => {
+const getSheetsNewsletters = () => {
   return [
     {
       pillar: "FEATURES",
