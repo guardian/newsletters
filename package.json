@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tsc": "tsc",
+    "prettier": "prettier . --check",
+    "prettier:fix": "prettier . --write",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.4.1",
@@ -22,6 +26,7 @@
     "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "^8.3.0",
     "prettier": "2.4.1",
-    "typescript": "4.4.3"
+    "typescript": "4.4.3",
+    "husky": "^7.0.0"
   }
 }
