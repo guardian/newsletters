@@ -24,6 +24,7 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@emotion/babel-preset-css-prop": "^11.1.2",
+    "@guardian/prettier": "^0.7.0",
     "@storybook/addon-actions": "^6.3.8",
     "@storybook/addon-essentials": "^6.3.8",
     "@storybook/addon-links": "^6.3.8",
@@ -33,8 +34,8 @@
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "^8.3.0",
+    "husky": "^7.0.0",
     "prettier": "2.4.1",
-    "typescript": "4.4.3",
-    "husky": "^7.0.0"
+    "typescript": "4.4.3"
   }
 }

@@ -1335,6 +1335,11 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
+"@guardian/prettier@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-0.7.0.tgz#360256e1cb77cba2873ceb1317484956d96039b7"
+  integrity sha512-1FPQ3QDbb5lPcOKJJy0aU6lU9h9CSe91FI4J9ZZ6Qc9Ewb2XS5VL1eX2df2YJOGZ+nXo90Q/YG7+LUUYtcQKKw==
+
 "@guardian/src-foundations@^3.9.0":
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.9.0.tgz#573cc294ff607698941f90e544826f598fd66fad"
