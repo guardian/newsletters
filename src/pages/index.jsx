@@ -21,7 +21,9 @@ export const getStaticProps = async () => {
 };
 
 /**
- * @param {{newsletters: Newsletter[]}} props
+ * 
+ * @param {object} props 
+ * @param {Newsletter[]} props.newsletters
  */
 const Home = ({ newsletters }) => {
   return (
