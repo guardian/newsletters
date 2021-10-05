@@ -1,0 +1,11 @@
+{
+  "projectName": "newsletters",
+  "vcsURL": "https://github.com/guardian/newsletters",
+  "actions": [
+    {
+      "action": "newsletters",
+      "path": "./.next/",
+      "compress": "zip"
+    }
+  ]
+}

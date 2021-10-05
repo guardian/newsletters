@@ -1,0 +1,12 @@
+stacks:
+  - playground
+regions:
+  - eu-west-1
+deployments:
+  newsletters:
+    type: aws-s3
+    parameters:
+      cacheControl: max-age=0
+      publicReadAcl: false
+      bucket: playground-dist
+      prefixStack: false
