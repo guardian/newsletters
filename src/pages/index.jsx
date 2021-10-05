@@ -11,7 +11,7 @@ const h1 = css`
 	${headline.medium()};
 `;
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const newsletters = await getNewsletters();
 	return {
 		props: {
