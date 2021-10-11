@@ -1,15 +1,7 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next';
+import { Request, Response } from 'express';
+import { Newsletter } from '../types/newsletters';
 
-/**
- * @param {NextApiRequest} _
- * @param {NextApiResponse} res
- */
-export default function handler(_, res) {
-	res.status(200).json(getSheetsNewsletters());
-}
-
-const getSheetsNewsletters = () => {
+const getSheetsNewsletters = (): Newsletter[] => {
 	return [
 		{
 			pillar: 'FEATURES',
@@ -19,11 +11,17 @@ const getSheetsNewsletters = () => {
 			frequency: 'Weekly, Friday/ad usually, ~12-2pm',
 			format: 'Article',
 			contact: 'A contact',
-			opha_alert: undefined,
-			sign_up_page:
+			ophanAlert: undefined,
+			signUpPage:
 				'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
 			notes: undefined,
 			treat: 'world/series/the-upside',
 		},
 	];
 };
+
+const getNewsletters = (_: Request, res: Response): void => {
+	res.status(200).json(getSheetsNewsletters());
+};
+
+export { getNewsletters };

@@ -6,8 +6,8 @@ export type Newsletter = {
 	frequency: string;
 	format: 'Article';
 	contact: string;
-	opha_alert: undefined;
-	sign_up_page: string;
+	ophanAlert: undefined;
+	signUpPage: string;
 	notes: undefined;
 	treat: string;
 };
