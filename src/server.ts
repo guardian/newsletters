@@ -1,4 +1,4 @@
-import { Context } from 'aws-lambda';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 import awsServerlessExpress from 'aws-serverless-express';
 import express from 'express';
 import { getNewsletters } from './api/newsletters';
@@ -14,7 +14,8 @@ if (process.env.NODE_ENV === 'development') {
 	app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 } else {
 	const server = awsServerlessExpress.createServer(app);
-	exports.handler = (event: any, context: Context): void => {
+	const handler: APIGatewayProxyHandler = (event, context) => {
 		awsServerlessExpress.proxy(server, event, context);
 	};
+	exports.handler = handler;
 }
