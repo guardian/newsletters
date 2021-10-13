@@ -13,7 +13,6 @@ deployments:
     type: aws-lambda
     dependencies: [cloudformation]
     parameters:
-      prefixStack: true
       bucket: playground-dist
       fileName: lambda.zip
       functionNames: [-newsletter-api-]
