@@ -4,9 +4,9 @@ regions: [eu-west-1]
 deployments:
   cloudformation:
     type: cloud-formation
-    app: newsletters
+    app: newsletter-api
     parameters:
-      cloudFormationStackName: newsletters
+      cloudFormationStackName: newsletter-api
       templatePath: cloudformation.yaml
       cloudFormationStackByTags: false
   lambda:
@@ -16,4 +16,4 @@ deployments:
       prefixStack: true
       bucket: playground-dist
       fileName: lambda.zip
-      functionNames: [-newsletters-]
+      functionNames: [-newsletter-api-]

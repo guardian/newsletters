@@ -15,14 +15,14 @@ export class LambdaService extends cdk.Stack {
 		const bucket = 'playground-dist';
 		const key = `playground/${stage.value}/lambda/lambda.zip`;
 
-		const handler = new lambda.Function(this, 'playground-newsletters', {
+		const handler = new lambda.Function(this, 'playground-newsletter-api', {
 			runtime: lambda.Runtime.NODEJS_12_X,
 			code: lambda.Code.fromBucket(
 				s3.Bucket.fromBucketName(this, 'lambda-code-bucket', bucket),
 				key,
 			),
 			handler: 'server.handler',
-			functionName: `playground-newsletters-${stage.value}`,
+			functionName: `playground-newsletter-api-${stage.value}`,
 		});
 
 		// If you need access to parameter store then uncomment and adjust the following:
@@ -35,8 +35,8 @@ export class LambdaService extends cdk.Stack {
 		// );
 
 		// tslint:disable-next-line: no-unused-expression
-		new apigateway.LambdaRestApi(this, 'newsletters', {
-			restApiName: `newsletters-${stage.value}`,
+		new apigateway.LambdaRestApi(this, 'newsletter-api', {
+			restApiName: `newsletter-api-${stage.value}`,
 			description: 'newsletters source',
 			proxy: true,
 			handler,
@@ -50,4 +50,4 @@ export class LambdaService extends cdk.Stack {
 
 const app = new cdk.App();
 // tslint:disable-next-line: no-unused-expression
-new LambdaService(app, 'newsletters');
+new LambdaService(app, 'newsletter-api');
