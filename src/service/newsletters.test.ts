@@ -1,7 +1,7 @@
 import * as mock from '../lib/readNewslettersSheet';
 import { getNewslettersFromSheet } from './newsletters';
 
-test('Newsletter get sheets', async () => {
+describe('Newsletter get sheets', () => {
 	const mockResponse = [
 		[
 			'pillar',
@@ -33,24 +33,27 @@ test('Newsletter get sheets', async () => {
 	jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(() =>
 		Promise.resolve(mockResponse),
 	);
-	const want = [
-		{
-			pillar: 'FEATURES',
-			email: 'The Upside',
-			previews: 'https://www.theguardian.com/',
-			topic: 'Series of same name',
-			frequency: 'Weekly, Friday/ad usually, ~12-2pm',
-			format: 'Article',
-			contact: 'A contact',
-			ophanAlert: '',
-			signUpPage:
-				'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
-			notes: '',
-			treat: 'world/series/the-upside',
-		},
-	];
 
-	const got = await getNewslettersFromSheet();
+	test('Newsletter get sheets', () => {
+		const want = [
+			{
+				pillar: 'FEATURES',
+				email: 'The Upside',
+				previews: 'https://www.theguardian.com/',
+				topic: 'Series of same name',
+				frequency: 'Weekly, Friday/ad usually, ~12-2pm',
+				format: 'Article',
+				contact: 'A contact',
+				ophanAlert: '',
+				signUpPage:
+					'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
+				notes: '',
+				treat: 'world/series/the-upside',
+			},
+		];
 
-	expect(got).toEqual(want);
+		const got = getNewslettersFromSheet();
+
+		expect(got).toEqual(want);
+	});
 });
