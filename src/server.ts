@@ -1,8 +1,8 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import awsServerlessExpress from 'aws-serverless-express';
+import * as dotenvFlow from 'dotenv-flow';
 import express from 'express';
 import { getNewsletters } from './api/newsletters';
-import * as dotenvFlow from 'dotenv-flow';
 
 dotenvFlow.config();
 const app = express();

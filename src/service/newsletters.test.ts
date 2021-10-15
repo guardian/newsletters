@@ -1,6 +1,38 @@
+import * as mock from '../lib/readNewslettersSheet';
 import { getNewslettersFromSheet } from './newsletters';
 
-test('Newsletter get sheets', () => {
+test('Newsletter get sheets', async () => {
+	const mockResponse = [
+		[
+			'pillar',
+			'email',
+			'preview',
+			'topic',
+			'frequency',
+			'format',
+			'contact',
+			'ophan alert',
+			'signup page',
+			'notes',
+			'treat',
+		],
+		[
+			'FEATURES',
+			'The Upside',
+			'https://www.theguardian.com/',
+			'Series of same name',
+			'Weekly, Friday/ad usually, ~12-2pm',
+			'Article',
+			'A contact',
+			'',
+			'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
+			'',
+			'world/series/the-upside',
+		],
+	];
+	jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(() =>
+		Promise.resolve(mockResponse),
+	);
 	const want = [
 		{
 			pillar: 'FEATURES',
@@ -10,14 +42,15 @@ test('Newsletter get sheets', () => {
 			frequency: 'Weekly, Friday/ad usually, ~12-2pm',
 			format: 'Article',
 			contact: 'A contact',
-			ophanAlert: undefined,
+			ophanAlert: '',
 			signUpPage:
 				'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
-			notes: undefined,
+			notes: '',
 			treat: 'world/series/the-upside',
 		},
 	];
-	const got = getNewslettersFromSheet();
+
+	const got = await getNewslettersFromSheet();
 
 	expect(got).toEqual(want);
 });

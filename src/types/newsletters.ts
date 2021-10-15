@@ -4,10 +4,10 @@ export type Newsletter = {
 	previews: string;
 	topic: string;
 	frequency: string;
-	format: 'Article';
+	format: string;
 	contact: string;
-	ophanAlert: undefined;
+	ophanAlert: string;
 	signUpPage: string;
-	notes: undefined;
+	notes: string;
 	treat: string;
 };
