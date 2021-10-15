@@ -34,7 +34,7 @@ describe('Newsletter get sheets', () => {
 		Promise.resolve(mockResponse),
 	);
 
-	test('Newsletter get sheets', () => {
+	test('Newsletter get sheets', async () => {
 		const want = [
 			{
 				pillar: 'FEATURES',
@@ -52,7 +52,7 @@ describe('Newsletter get sheets', () => {
 			},
 		];
 
-		const got = getNewslettersFromSheet();
+		const got = await getNewslettersFromSheet();
 
 		expect(got).toEqual(want);
 	});
