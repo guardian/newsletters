@@ -15,28 +15,27 @@ export class LambdaService extends cdk.Stack {
 		const bucket = 'playground-dist';
 		const key = `playground/${stage.value}/lambda/lambda.zip`;
 
-		const handler = new lambda.Function(this, 'playground-newsletter-api', {
-			runtime: lambda.Runtime.NODEJS_12_X,
-			code: lambda.Code.fromBucket(
-				s3.Bucket.fromBucketName(this, 'lambda-code-bucket', bucket),
-				key,
-			),
-			handler: 'server.handler',
-			functionName: `playground-newsletter-api-${stage.value}`,
-		});
-
-		// If you need access to parameter store then uncomment and adjust the following:
-		// handler.addToRolePolicy(
-		//     new iam.PolicyStatement({
-		//         effect: iam.Effect.ALLOW,
-		//         resources: ['arn:aws:ssm:eu-west-1:[your account ID goes here]:parameter/*'],
-		//         actions: ['ssm:GetParameter'],
-		//     }),
-		// );
+		const handler = new lambda.Function(
+			this,
+			'playground-newsletters-api',
+			{
+				runtime: lambda.Runtime.NODEJS_12_X,
+				code: lambda.Code.fromBucket(
+					s3.Bucket.fromBucketName(
+						this,
+						'lambda-code-bucket',
+						bucket,
+					),
+					key,
+				),
+				handler: 'server.handler',
+				functionName: `playground-newsletters-api-${stage.value}`,
+			},
+		);
 
 		// tslint:disable-next-line: no-unused-expression
-		new apigateway.LambdaRestApi(this, 'newsletter-api', {
-			restApiName: `newsletter-api-${stage.value}`,
+		new apigateway.LambdaRestApi(this, 'newsletters-api', {
+			restApiName: `newsletters-api-${stage.value}`,
 			description: 'newsletters source',
 			proxy: true,
 			handler,
@@ -50,4 +49,4 @@ export class LambdaService extends cdk.Stack {
 
 const app = new cdk.App();
 // tslint:disable-next-line: no-unused-expression
-new LambdaService(app, 'newsletter-api');
+new LambdaService(app, 'newsletters-api');

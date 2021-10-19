@@ -1,8 +1,8 @@
 {
-  "name": "newsletter",
+  "name": "newsletters",
   "version": "0.1.0",
   "description": "newsletters source",
-  "repository": "git@github.com:guardian/newsletters.git",
+  "repository": "https://github.com/guardian/newsletters.git",
   "author": "The Guardian",
   "license": "MIT",
   "private": true,

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Newsletter } from '../types/newsletters';
 
-const getSheetsNewsletters = (): Newsletter[] => {
+const getNewslettersFromSheet = (): Newsletter[] => {
 	return [
 		{
 			pillar: 'FEATURES',
@@ -21,7 +21,7 @@ const getSheetsNewsletters = (): Newsletter[] => {
 };
 
 const getNewsletters = (_: Request, res: Response): void => {
-	res.status(200).json(getSheetsNewsletters());
+	res.status(200).json(getNewslettersFromSheet());
 };
 
 export { getNewsletters };
