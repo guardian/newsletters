@@ -1,10 +1,10 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import awsServerlessExpress from 'aws-serverless-express';
-import * as dotenvFlow from 'dotenv-flow';
+import * as dotenv from 'dotenv';
 import express from 'express';
 import { getNewsletters } from './api/newsletters';
 
-dotenvFlow.config();
+dotenv.config();
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
