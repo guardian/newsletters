@@ -1,15 +1,16 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import awsServerlessExpress from 'aws-serverless-express';
-import express from 'express';
-import { getNewsletters } from './api/newsletters';
+import * as dotenv from 'dotenv';
+import express, { json } from 'express';
+import { router } from './routes/routes';
 
+dotenv.config();
 const app = express();
-app.use(express.json({ limit: '50mb' }));
+app.use(json({ limit: '50mb' }));
 
-app.get('/newsletters', getNewsletters);
+app.use('/', router);
 
-// If local then don't wrap in serverless
-const PORT = 3000;
+const PORT = process.env.PORT;
 if (process.env.NODE_ENV === 'development') {
 	app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 } else {
