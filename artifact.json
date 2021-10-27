@@ -1,0 +1,16 @@
+{
+  "projectName": "newsletters::newsletters-api",
+  "vcsURL": "https://github.com/guardian/newsletters",
+  "actions": [
+    {
+      "action": "lambda",
+      "path": "dist",
+      "compress": "zip"
+    },
+    {
+      "action": "cloudformation",
+      "path": "cloudformation.yaml",
+      "compress": false
+    }
+  ]
+}

@@ -1,16 +1,18 @@
-# newsletters
+# Newsletters
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Newsletter source API bootstrapped with [ts-node-starter-kit](https://github.com/guardian/ts-node-starter-kit)
 
-## Getting Started
+## Commands
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
+- yarn dev // run dev server
+- yarn test // run tests
+- yarn test example // test example.test.ts
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Core technologies included
+
+- TypeScript
+- Node
+- Express (HTTP server)
+- Jest (testing library)

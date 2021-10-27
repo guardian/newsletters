@@ -8,12 +8,8 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
-/build
+/dist
 
 # misc
 .DS_Store
@@ -30,5 +26,5 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# vercel
-.vercel
+cloudformation.yaml
+cdk.out/

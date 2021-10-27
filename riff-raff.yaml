@@ -1,0 +1,18 @@
+stacks: [playground]
+regions: [eu-west-1]
+
+deployments:
+  cloudformation:
+    type: cloud-formation
+    app: newsletters-api
+    parameters:
+      cloudFormationStackName: newsletters-api
+      templatePath: cloudformation.yaml
+      cloudFormationStackByTags: false
+  lambda:
+    type: aws-lambda
+    dependencies: [cloudformation]
+    parameters:
+      bucket: playground-dist
+      fileName: lambda.zip
+      functionNames: [-newsletters-api-]
