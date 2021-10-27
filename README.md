@@ -22,14 +22,16 @@ API running on port 3000 (see .env)
 
 ### changelog
 
+Added Version in cell A1, current version 0.1
+
 Column added:
  C: displayed name
  G: displayed frequency
- N: group
- O: displayed theme
- P: order in category
- Q: description
- P: listIdv1
+ M: group
+ N: displayed theme
+ O: order in category
+ P: description
+ Q: listIdv1
  R: listId
  S: identity name
  T: brazeSubscribeEventNamePrefix
@@ -44,6 +46,7 @@ Column added:
  AC: illustration
 
 removed duplicate format column
+removed unused ophan column
 
 Added 2 newsletters:
 

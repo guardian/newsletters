@@ -14,7 +14,6 @@ describe('Newsletters service', () => {
 				'Weekly',
 				'Article',
 				'A contact',
-				'',
 				'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
 				'',
 				'world/series/the-upside',
