@@ -1,14 +1,12 @@
 import {
 	GROUP_INDEX,
-	ORDER_INDEX,
 	prepareRows,
 	PREVIEW_INDEX,
 	readNewslettersSheet,
 	THEME_INDEX,
 } from '../lib/googleNewsletterSheets';
-import { EmailNewsletter, GroupedNewsletters } from '../models/newsletters';
+import { EmailNewsletter } from '../models/newsletters';
 import {
-	camelise,
 	getBrazeAttributeName,
 	replaceLastSpaceByNonBreakingSpace,
 } from '../util';
@@ -23,20 +21,21 @@ const rowToNewsletter = ({
 	[PREVIEW_INDEX]: exampleUrl,
 	6: frequency,
 	[THEME_INDEX]: theme,
-	15: description,
-	16: listIdv1,
-	17: listId,
-	18: id,
-	19: brazeSubscribeEventNamePrefix,
-	20: brazeNewsletterName,
-	21: brazeSubscribeAttributeName,
-	22: mailName,
-	23: mailTitle,
-	24: mailDescription,
-	25: mailSuccessDescription,
-	26: mailHexCode,
-	27: mailImageUrl,
-	28: illustration,
+	[GROUP_INDEX]: group,
+	14: description,
+	15: listIdv1,
+	16: listId,
+	17: id,
+	18: brazeSubscribeEventNamePrefix,
+	19: brazeNewsletterName,
+	20: brazeSubscribeAttributeName,
+	21: mailName,
+	22: mailTitle,
+	23: mailDescription,
+	24: mailSuccessDescription,
+	25: mailHexCode,
+	26: mailImageUrl,
+	27: illustration,
 }: string[]): EmailNewsletter => ({
 	id,
 	name,
@@ -46,6 +45,7 @@ const rowToNewsletter = ({
 		getBrazeAttributeName(brazeSubscribeEventNamePrefix),
 	brazeSubscribeEventNamePrefix,
 	theme,
+	group,
 	description: description,
 	frequency,
 	exactTargetListId: parseInt(listId),
@@ -66,38 +66,11 @@ const rowToNewsletter = ({
 	illustration: getIllutration(illustration),
 });
 
-const getGroupedNewsletters = (
-	groups: string[],
-	rows: string[][],
-): GroupedNewsletters => {
-	const results: GroupedNewsletters = {};
-
-	groups.forEach((g) => {
-		const nl = rows.filter(
-			({ [GROUP_INDEX]: group }) =>
-				group.toUpperCase() === g.toUpperCase(),
-		);
-		results[camelise(nl[0][GROUP_INDEX])] = {
-			displayName: g,
-			newsletters: nl
-				.sort(
-					({ [ORDER_INDEX]: a }, { [ORDER_INDEX]: b }) =>
-						parseInt(a) - parseInt(b),
-				)
-				.map(rowToNewsletter),
-		};
-	});
-	return results;
-};
-
-const getGroupedEmailNewsletters = async (): Promise<GroupedNewsletters> => {
+const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	const rows = await readNewslettersSheet();
 	const preparedRows = prepareRows(rows);
 
-	const groups = [
-		...new Set(preparedRows.map(({ [GROUP_INDEX]: group }) => group)),
-	];
-	return getGroupedNewsletters(groups, preparedRows);
+	return preparedRows.map(rowToNewsletter);
 };
 
-export { getGroupedEmailNewsletters };
+export { getEmailNewsletters };

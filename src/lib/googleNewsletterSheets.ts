@@ -7,7 +7,6 @@ const SHEET_RANGE = 'A:AD';
 const PREVIEW_INDEX = 3;
 const GROUP_INDEX = 12;
 const THEME_INDEX = 13;
-const ORDER_INDEX = 14;
 
 const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 	const googleAuth = new google.auth.GoogleAuth({
@@ -93,7 +92,6 @@ const prepareRows = (rows: sheetsV4.Schema$RowData[]): string[][] => {
 };
 
 export {
-	ORDER_INDEX,
 	PREVIEW_INDEX,
 	GROUP_INDEX,
 	THEME_INDEX,
