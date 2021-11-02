@@ -16,34 +16,32 @@ API running on port 3000 (see .env)
 
 ## Mastersheet
 
-### TEST spreadsheet URL
-
-    https://docs.google.com/spreadsheets/d/16ANwzbG0luiFEXeBbVHYK8Mc5mqg6Kn44SOKLe6gaeI/edit#gid=0
-
 ### changelog
+
+Added Version in cell A1, current version 0.1
 
 Column added:
  C: displayed name
  G: displayed frequency
- N: group
- O: displayed theme
- P: order in category
- Q: description
+ M: group
+ N: displayed theme
+ O: description
  P: listIdv1
- R: listId
- S: identity name
- T: brazeSubscribeEventNamePrefix
- U: brazeNewsletterName
- V: brazeSubscribeAttributeName blank if can be derived from brazeSubscribeEventNamePrefix
- W: mailName blank if same as name
- X: mailTitle blank if can be derived from name
- Y: mailDescription blank if same as description
- Z: mailSuccessDescription
- AA: mailHexCode blank if default
- AB: mailImageUrl
- AC: illustration
+ Q: listId
+ R: identity name
+ S: brazeSubscribeEventNamePrefix
+ T: brazeNewsletterName
+ U: brazeSubscribeAttributeName blank if can be derived from brazeSubscribeEventNamePrefix
+ V: mailName blank if same as name
+ W: mailTitle blank if can be derived from name
+ X: mailDescription blank if same as description
+ Y: mailSuccessDescription
+ Z:: mailHexCode blank if default
+ AA: mailImageUrl
+ AB: illustration
 
 removed duplicate format column
+removed unused ophan column
 
 Added 2 newsletters:
 

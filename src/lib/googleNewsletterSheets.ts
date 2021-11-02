@@ -1,12 +1,12 @@
 import { strict as assert } from 'assert';
 import { google, sheets_v4 as sheetsV4 } from 'googleapis';
 
+const SHEET_VERSION = '0.1';
 const SHEET_NAME = 'Emails';
 const SHEET_RANGE = 'A:AD';
 const PREVIEW_INDEX = 3;
-const GROUP_INDEX = 13;
-const THEME_INDEX = 14;
-const ORDER_INDEX = 15;
+const GROUP_INDEX = 12;
+const THEME_INDEX = 13;
 
 const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 	const googleAuth = new google.auth.GoogleAuth({
@@ -31,6 +31,15 @@ const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 			data.sheets[0].data[0].rowData &&
 			data.sheets[0].data[0].rowData,
 		'No data retrieved from spreadsheet',
+	);
+
+	assert.equal(
+		(
+			data.sheets[0].data[0].rowData[0]
+				?.values as sheetsV4.Schema$CellData[]
+		)[0].formattedValue,
+		SHEET_VERSION,
+		`Sheet version expected: ${SHEET_VERSION}`,
 	);
 
 	return data.sheets[0].data[0].rowData;
@@ -83,7 +92,6 @@ const prepareRows = (rows: sheetsV4.Schema$RowData[]): string[][] => {
 };
 
 export {
-	ORDER_INDEX,
 	PREVIEW_INDEX,
 	GROUP_INDEX,
 	THEME_INDEX,

@@ -1,15 +1,8 @@
 import {
-	camelise,
 	capitalise,
 	getBrazeAttributeName,
 	replaceLastSpaceByNonBreakingSpace,
 } from './';
-
-describe('camelise', () => {
-	it('camelise', () => {
-		expect(camelise('News roundups')).toEqual('newsRoundups');
-	});
-});
 
 describe('capitalise', () => {
 	it('capitalise', () => {

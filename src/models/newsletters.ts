@@ -16,6 +16,7 @@ export type EmailNewsletter = {
 	name: string;
 	id: string;
 	theme: string;
+	group: string;
 	//teaser: string; //deprecated for description
 	description: string;
 	frequency: string;
@@ -30,22 +31,4 @@ export type EmailNewsletter = {
 	exampleUrl?: string;
 	triggerId?: number;
 	illustration?: NewsletterIllustration;
-};
-
-export type GroupedNewsletter = {
-	displayName: string;
-	newsletters: EmailNewsletter[];
-};
-
-export type GroupedNewsletters = {
-	newsRoundups?: GroupedNewsletter;
-	newsByTopic?: GroupedNewsletter;
-	features?: GroupedNewsletter;
-	sport?: GroupedNewsletter;
-	culture?: GroupedNewsletter;
-	lifestyle?: GroupedNewsletter;
-	comment?: GroupedNewsletter;
-	work?: GroupedNewsletter;
-	fromThePapers?: GroupedNewsletter;
-	[key: string]: GroupedNewsletter | undefined;
 };
