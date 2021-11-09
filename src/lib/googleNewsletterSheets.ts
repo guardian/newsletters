@@ -9,16 +9,15 @@ const GROUP_INDEX = 12;
 const THEME_INDEX = 13;
 
 const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
-	const googleAuth = new google.auth.GoogleAuth({
-		credentials: {
-			// eslint-disable-next-line @typescript-eslint/camelcase -- Google specifies this property name
-			client_email: process.env.GOOGLE_CLIENT_EMAIL,
-			// eslint-disable-next-line @typescript-eslint/camelcase -- Google specifies this property name
-			private_key: process.env.GOOGLE_PRIVATE_KEY,
-		},
+	if (!process.env.GOOGLE_SERVICE_ACCOUNT) {
+		throw new Error(`$GOOGLE_SERVICE_ACCOUNT not available`);
+	}
+	const serviceAccountJSON = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+
+	const auth = new google.auth.GoogleAuth({
 		scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-	});
-	const auth = await googleAuth.getClient();
+	}).fromJSON(serviceAccountJSON);
+
 	const googleSheetsInstance = google.sheets({ version: 'v4', auth });
 
 	const spreadsheetId = process.env.SPREADSHEET_ID;
