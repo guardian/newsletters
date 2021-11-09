@@ -18,10 +18,11 @@ Added Version in cell A1, current version 0.1
 Column added:
  C: displayed name
  G: displayed frequency
+ J: signup page
  M: group
  N: displayed theme
  O: description
- P: listIdv1
+ P: listIdV1
  Q: listId
  R: identity name
  S: brazeSubscribeEventNamePrefix
@@ -40,12 +41,12 @@ removed unused ophan column
 
 Added 2 newsletters:
 
-- The Rural Network
-- Australia's Modern Outback
+* The Rural Network
+* Australia's Modern Outback
 
 ## Core technologies included
 
-- TypeScript
-- Node
-- Express (HTTP server)
-- Jest (testing library)
+* TypeScript
+* Node
+* Express (HTTP server)
+* Jest (testing library)

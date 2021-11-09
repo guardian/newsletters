@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
 import { google, sheets_v4 as sheetsV4 } from 'googleapis';
+import { removeSitePrefix } from '../util';
 import { getConfigItem } from '../util/config';
 
 const SHEET_VERSION = '0.1';
@@ -51,9 +52,6 @@ const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 
 const isDataRow = ({ values }: sheetsV4.Schema$RowData): boolean =>
 	!!values && !!values[1].formattedValue;
-
-const removeSitePrefix = (s: string | undefined | null): string | undefined =>
-	s?.replace('https://www.theguardian.com', '')?.trim();
 
 const formatPreviewLinks = (
 	v: sheetsV4.Schema$CellData,

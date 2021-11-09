@@ -7,8 +7,12 @@ const getBrazeAttributeName = (s: string): string =>
 const replaceLastSpaceByNonBreakingSpace = (s: string): string =>
 	s.replace(/\s([^\s]*)$/, '\u00a0$1');
 
+const removeSitePrefix = (s: string | undefined | null): string | undefined =>
+	s?.replace('https://www.theguardian.com', '')?.trim();
+
 export {
 	capitalise,
 	getBrazeAttributeName,
+	removeSitePrefix,
 	replaceLastSpaceByNonBreakingSpace,
 };
