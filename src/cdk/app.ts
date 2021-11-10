@@ -12,26 +12,18 @@ export class LambdaService extends cdk.Stack {
 			default: 'CODE',
 		});
 
-		const bucket = 'playground-dist';
-		const key = `playground/${stage.value}/lambda/lambda.zip`;
+		const bucket = 'aws-frontend-artifacts';
+		const key = `frontend/${stage.value}/newsletters-api/lambda.zip`;
 
-		const handler = new lambda.Function(
-			this,
-			'playground-newsletters-api',
-			{
-				runtime: lambda.Runtime.NODEJS_12_X,
-				code: lambda.Code.fromBucket(
-					s3.Bucket.fromBucketName(
-						this,
-						'lambda-code-bucket',
-						bucket,
-					),
-					key,
-				),
-				handler: 'server.handler',
-				functionName: `playground-newsletters-api-${stage.value}`,
-			},
-		);
+		const handler = new lambda.Function(this, 'frontend-newsletters-api', {
+			runtime: lambda.Runtime.NODEJS_12_X,
+			code: lambda.Code.fromBucket(
+				s3.Bucket.fromBucketName(this, 'lambda-code-bucket', bucket),
+				key,
+			),
+			handler: 'server.handler',
+			functionName: `frontend-newsletters-api-${stage.value}`,
+		});
 
 		// tslint:disable-next-line: no-unused-expression
 		new apigateway.LambdaRestApi(this, 'newsletters-api', {
