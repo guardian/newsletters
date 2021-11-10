@@ -4,11 +4,10 @@ Newsletter source API bootstrapped with [ts-node-starter-kit](https://github.com
 
 ## Setting up your development environment
 
-* Configuration is fetched from AWS Parameter Store. You will need Frontend credentials from Janus. You can override this configuration by setting the following environment variables:
-    * `GOOGLE_SERVICE_ACCOUNT_JSON` - Service account JSON file as a string
-    * `SPREADSHEET_ID` - The ID of the spreadsheet to access
-* `yarn dev` runs the dev server (default port 4000)
-* `yarn test` runs the tests
+* Configuration is fetched from AWS Parameter Store. You will need Frontend credentials from Janus.
+* `yarn install` to install the dependencies
+* `yarn dev` to run the dev server (default port is 4000)
+* `yarn test` to run the tests
 
 ## Mastersheet
 
