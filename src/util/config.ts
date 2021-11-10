@@ -1,18 +1,19 @@
 import SSM from 'aws-sdk/clients/ssm';
 import {
+	CredentialProviderChain,
 	ECSCredentials,
 	SharedIniFileCredentials,
-	CredentialProviderChain,
 } from 'aws-sdk/lib/core';
 
 const Stage = process.env.Stage ?? 'CODE';
 const Path = `/frontend/${Stage}/newsletters-api/`;
-type Config = { [key: string]: any };
+type Config = { [key: string]: string };
 
 const ssm: SSM = new SSM({
 	credentialProvider: new CredentialProviderChain([
-		() => new SharedIniFileCredentials({ profile: 'frontend' }),
-		() => new ECSCredentials(),
+		(): SharedIniFileCredentials =>
+			new SharedIniFileCredentials({ profile: 'frontend' }),
+		(): ECSCredentials => new ECSCredentials(),
 	]),
 	region: 'eu-west-1',
 });
@@ -30,7 +31,7 @@ async function fetchConfig(): Promise<Config> {
 			})
 			.promise();
 		for (const parameter of awsParameters.Parameters ?? []) {
-			if (parameter.Name) {
+			if (parameter.Name && parameter.Value) {
 				const name = parameter.Name.replace(Path, '');
 				state[name] = parameter.Value;
 			}
@@ -41,7 +42,7 @@ async function fetchConfig(): Promise<Config> {
 	}
 }
 
-export async function getConfigItem(key: string): Promise<any> {
+export async function getConfigItem(key: string): Promise<string> {
 	const config = await fetchConfig();
 	if (config[key]) {
 		return config[key];

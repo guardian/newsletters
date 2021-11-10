@@ -1,6 +1,6 @@
-import { getConfigItem } from '../util/config';
 import { strict as assert } from 'assert';
 import { google, sheets_v4 as sheetsV4 } from 'googleapis';
+import { getConfigItem } from '../util/config';
 
 const SHEET_VERSION = '0.1';
 const SHEET_NAME = 'Emails';
