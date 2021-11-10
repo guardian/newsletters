@@ -1,3 +1,4 @@
+import { getConfigItem } from '../util/config';
 import { strict as assert } from 'assert';
 import { google, sheets_v4 as sheetsV4 } from 'googleapis';
 
@@ -9,10 +10,8 @@ const GROUP_INDEX = 12;
 const THEME_INDEX = 13;
 
 const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
-	if (!process.env.GOOGLE_SERVICE_ACCOUNT) {
-		throw new Error(`$GOOGLE_SERVICE_ACCOUNT not available`);
-	}
-	const serviceAccountJSON = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+	const serviceAccountFromConfig = await getConfigItem('google.key');
+	const serviceAccountJSON = JSON.parse(serviceAccountFromConfig);
 
 	const auth = new google.auth.GoogleAuth({
 		scopes: ['https://www.googleapis.com/auth/spreadsheets'],
@@ -20,7 +19,7 @@ const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 
 	const googleSheetsInstance = google.sheets({ version: 'v4', auth });
 
-	const spreadsheetId = process.env.SPREADSHEET_ID;
+	const spreadsheetId = await getConfigItem('spreadsheet.id');
 	const { data } = await googleSheetsInstance.spreadsheets.get({
 		spreadsheetId,
 		includeGridData: true,
