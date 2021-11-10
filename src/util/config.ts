@@ -6,6 +6,7 @@ import {
 } from 'aws-sdk/lib/core';
 
 const Stage = process.env.Stage ?? 'CODE';
+const Path = `/frontend/${Stage}/newsletters-api/`;
 type Config = { [key: string]: any };
 
 const ssm: SSM = new SSM({
@@ -22,16 +23,15 @@ async function fetchConfig(): Promise<Config> {
 	if (state == null) {
 		state = {};
 
-		const path = `/frontend/${Stage}/newsletters-api/`;
 		const awsParameters = await ssm
 			.getParametersByPath({
-				Path: path,
+				Path,
 				WithDecryption: true,
 			})
 			.promise();
 		for (const parameter of awsParameters.Parameters ?? []) {
 			if (parameter.Name) {
-				const name = parameter.Name.replace(path, '');
+				const name = parameter.Name.replace(Path, '');
 				state[name] = parameter.Value;
 			}
 		}
@@ -46,6 +46,6 @@ export async function getConfigItem(key: string): Promise<any> {
 	if (config[key]) {
 		return config[key];
 	} else {
-		throw new Error(`No config value for key: ${key}`);
+		throw new Error(`No config value for key: ${Path}`);
 	}
 }
