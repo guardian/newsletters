@@ -5,7 +5,7 @@ import {
 	SharedIniFileCredentials,
 } from 'aws-sdk/lib/core';
 
-const Stage = process.env.Stage ?? 'CODE';
+const Stage = process.env.STAGE ?? 'CODE';
 const Path = `/frontend/${Stage}/newsletters-api/`;
 type Config = { [key: string]: string };
 
