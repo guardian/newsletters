@@ -10,7 +10,7 @@ app.use(json({ limit: '50mb' }));
 
 app.use('/', router);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4000;
 if (process.env.NODE_ENV === 'development') {
 	app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 } else {
