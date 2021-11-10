@@ -5,6 +5,7 @@ import {
 	CredentialProviderChain,
 } from 'aws-sdk/lib/core';
 
+const Stage = process.env.Stage ?? 'CODE';
 type Config = { [key: string]: any };
 
 const ssm: SSM = new SSM({
@@ -21,7 +22,7 @@ async function fetchConfig(): Promise<Config> {
 	if (state == null) {
 		state = {};
 
-		const path = `/frontend/CODE/newsletters-api/`;
+		const path = `/frontend/${Stage}/newsletters-api/`;
 		const awsParameters = await ssm
 			.getParametersByPath({
 				Path: path,
