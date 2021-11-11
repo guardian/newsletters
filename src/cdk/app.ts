@@ -51,6 +51,7 @@ export class LambdaService extends cdk.Stack {
 			deployOptions: {
 				loggingLevel: apigateway.MethodLoggingLevel.INFO,
 				dataTraceEnabled: true,
+				stageName: '',
 			},
 		});
 	}
