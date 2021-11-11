@@ -1,15 +1,24 @@
 import apigateway = require('@aws-cdk/aws-apigateway');
+import * as iam from '@aws-cdk/aws-iam';
 import lambda = require('@aws-cdk/aws-lambda');
 import s3 = require('@aws-cdk/aws-s3');
+import { Aws } from '@aws-cdk/core';
 import cdk = require('@aws-cdk/core');
 
 export class LambdaService extends cdk.Stack {
 	constructor(scope: cdk.Construct, id: string) {
-		super(scope, id, { env: { region: 'eu-west-1' } });
+		super(scope, id, { env: { region: Aws.REGION } });
 
 		const stage = new cdk.CfnParameter(this, 'Stage', {
 			type: 'String',
 			default: 'CODE',
+		});
+
+		const ssmPolicy = new iam.PolicyStatement({
+			actions: ['ssm:GetParametersByPath'],
+			resources: [
+				`arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/frontend/${stage.valueAsString}/newsletters-api/*`,
+			],
 		});
 
 		const bucket = 'aws-frontend-artifacts';
@@ -23,7 +32,15 @@ export class LambdaService extends cdk.Stack {
 			),
 			handler: 'server.handler',
 			functionName: `frontend-newsletters-api-${stage.valueAsString}`,
+			memorySize: 384,
+			timeout: cdk.Duration.seconds(30),
 		});
+
+		handler.role?.attachInlinePolicy(
+			new iam.Policy(this, 'ssm-parameters-policy', {
+				statements: [ssmPolicy],
+			}),
+		);
 
 		// tslint:disable-next-line: no-unused-expression
 		new apigateway.LambdaRestApi(this, 'newsletters-api', {
