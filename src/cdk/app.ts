@@ -1,41 +1,50 @@
 import apigateway = require('@aws-cdk/aws-apigateway');
+import * as iam from '@aws-cdk/aws-iam';
 import lambda = require('@aws-cdk/aws-lambda');
 import s3 = require('@aws-cdk/aws-s3');
+import { Aws } from '@aws-cdk/core';
 import cdk = require('@aws-cdk/core');
 
 export class LambdaService extends cdk.Stack {
 	constructor(scope: cdk.Construct, id: string) {
-		super(scope, id, { env: { region: 'eu-west-1' } });
+		super(scope, id, { env: { region: Aws.REGION } });
 
 		const stage = new cdk.CfnParameter(this, 'Stage', {
 			type: 'String',
 			default: 'CODE',
 		});
 
-		const bucket = 'playground-dist';
-		const key = `playground/${stage.value}/lambda/lambda.zip`;
+		const ssmPolicy = new iam.PolicyStatement({
+			actions: ['ssm:GetParametersByPath'],
+			resources: [
+				`arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/frontend/${stage.valueAsString}/newsletters-api/*`,
+			],
+		});
 
-		const handler = new lambda.Function(
-			this,
-			'playground-newsletters-api',
-			{
-				runtime: lambda.Runtime.NODEJS_12_X,
-				code: lambda.Code.fromBucket(
-					s3.Bucket.fromBucketName(
-						this,
-						'lambda-code-bucket',
-						bucket,
-					),
-					key,
-				),
-				handler: 'server.handler',
-				functionName: `playground-newsletters-api-${stage.value}`,
-			},
+		const bucket = 'aws-frontend-artifacts';
+		const key = `frontend/${stage.valueAsString}/newsletters-api/newsletters-api.zip`;
+
+		const handler = new lambda.Function(this, 'frontend-newsletters-api', {
+			runtime: lambda.Runtime.NODEJS_14_X,
+			code: lambda.Code.fromBucket(
+				s3.Bucket.fromBucketName(this, 'lambda-code-bucket', bucket),
+				key,
+			),
+			handler: 'server.handler',
+			functionName: `frontend-newsletters-api-${stage.valueAsString}`,
+			memorySize: 384,
+			timeout: cdk.Duration.seconds(30),
+		});
+
+		handler.role?.attachInlinePolicy(
+			new iam.Policy(this, 'ssm-parameters-policy', {
+				statements: [ssmPolicy],
+			}),
 		);
 
 		// tslint:disable-next-line: no-unused-expression
 		new apigateway.LambdaRestApi(this, 'newsletters-api', {
-			restApiName: `newsletters-api-${stage.value}`,
+			restApiName: `newsletters-api-${stage.valueAsString}`,
 			description: 'newsletters source',
 			proxy: true,
 			handler,

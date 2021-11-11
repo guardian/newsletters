@@ -1,4 +1,4 @@
-stacks: [playground]
+stacks: [frontend]
 regions: [eu-west-1]
 
 deployments:
@@ -9,10 +9,10 @@ deployments:
       cloudFormationStackName: newsletters-api
       templatePath: cloudformation.yaml
       cloudFormationStackByTags: false
-  lambda:
+  newsletters-api:
     type: aws-lambda
     dependencies: [cloudformation]
     parameters:
-      bucket: playground-dist
-      fileName: lambda.zip
+      bucket: aws-frontend-artifacts
+      fileName: newsletters-api.zip
       functionNames: [-newsletters-api-]
