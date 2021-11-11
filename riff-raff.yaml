@@ -9,7 +9,7 @@ deployments:
       cloudFormationStackName: newsletters-api
       templatePath: cloudformation.yaml
       cloudFormationStackByTags: false
-  lambda:
+  newsletters-api:
     type: aws-lambda
     dependencies: [cloudformation]
     parameters:
