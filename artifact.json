@@ -3,7 +3,7 @@
   "vcsURL": "https://github.com/guardian/newsletters",
   "actions": [
     {
-      "action": "lambda",
+      "action": "newsletters-api",
       "path": "dist",
       "compress": "zip"
     },
