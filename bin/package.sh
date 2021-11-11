@@ -7,4 +7,4 @@ cp yarn.lock dist/
 cd dist
 yarn install --production
 cd ..
-cdk --profile frontend synth > cloudformation.yaml
+cdk --profile playground synth > cloudformation.yaml
