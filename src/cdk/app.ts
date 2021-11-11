@@ -34,6 +34,8 @@ export class LambdaService extends cdk.Stack {
 			),
 			handler: 'server.handler',
 			functionName: `frontend-newsletters-api-${stage.value}`,
+			memorySize: 384,
+			timeout: cdk.Duration.seconds(30),
 		});
 
 		handler.role?.attachInlinePolicy(
