@@ -13,7 +13,7 @@ export class LambdaService extends cdk.Stack {
 		});
 
 		const bucket = 'aws-frontend-artifacts';
-		const key = `frontend/${stage.valueAsString}/lambda/newsletters-api.zip`;
+		const key = `frontend/${stage.valueAsString}/newsletters-api/newsletters-api.zip`;
 
 		const handler = new lambda.Function(this, 'frontend-newsletters-api', {
 			runtime: lambda.Runtime.NODEJS_14_X,
