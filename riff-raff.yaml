@@ -14,5 +14,5 @@ deployments:
     dependencies: [cloudformation]
     parameters:
       bucket: aws-frontend-artifacts
-      fileName: lambda.zip
+      fileName: newsletters-api.zip
       functionNames: [-newsletters-api-]
