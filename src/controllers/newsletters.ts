@@ -16,7 +16,7 @@ import {
 	replaceLastSpaceByNonBreakingSpace,
 } from '../util';
 
-const getIllutration = (
+const getIllustration = (
 	circle: string,
 ): NewsletterIllustration | null | undefined => {
 	if (!circle) return;
