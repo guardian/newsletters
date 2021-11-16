@@ -74,7 +74,7 @@ const rowToNewsletter = ({
 			hexCode: mailHexCode || '#DCDCDC',
 			imageUrl: mailImageUrl?.length > 0 ? mailImageUrl : undefined,
 		},
-		illustration: getIllutration(illustration),
+		illustration: getIllustration(illustration),
 	} as EmailNewsletter);
 
 const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
