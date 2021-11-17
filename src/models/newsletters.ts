@@ -1,34 +1,41 @@
-type NewsletterIllustration = {
-	circle?: string;
-};
+import * as t from 'io-ts';
+import { optional } from 'io-ts-extra';
+import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 
-type EmailEmbed = {
-	name: string;
-	title: string;
-	description: string;
-	successHeadline: string;
-	successDescription: string;
-	hexCode: string;
-	imageUrl?: string; //deprecated
-};
+const NewsletterIllustrationType = t.type({
+	circle: t.string,
+});
 
-export type EmailNewsletter = {
-	name: string;
-	id: string;
-	theme: string;
-	group: string;
-	//teaser: string; //deprecated for description
-	description: string;
-	frequency: string;
-	exactTargetListId: number;
-	listId: number;
-	listIdv1: number;
-	brazeSubscribeAttributeName: string;
-	brazeSubscribeEventNamePrefix: string;
-	brazeNewsletterName: string;
-	emailEmbed: EmailEmbed;
-	signupPage?: string;
-	exampleUrl?: string;
-	triggerId?: number;
-	illustration?: NewsletterIllustration;
-};
+const EmailEmbedType = t.type({
+	name: NonEmptyString,
+	title: NonEmptyString,
+	description: NonEmptyString,
+	successHeadline: NonEmptyString,
+	successDescription: NonEmptyString,
+	hexCode: NonEmptyString,
+	imageUrl: optional(t.string), //deprecated
+});
+
+export const EmailNewsletterType = t.type({
+	name: NonEmptyString,
+	identityName: NonEmptyString,
+	theme: NonEmptyString,
+	group: NonEmptyString,
+	description: NonEmptyString,
+	frequency: NonEmptyString,
+	listId: t.number,
+	listIdV1: t.number,
+	brazeSubscribeAttributeName: NonEmptyString,
+	brazeSubscribeEventNamePrefix: NonEmptyString,
+	brazeNewsletterName: NonEmptyString,
+	emailEmbed: EmailEmbedType,
+	signupPage: optional(t.string),
+	exampleUrl: optional(t.string),
+	illustration: optional(NewsletterIllustrationType),
+});
+
+export type EmailEmbed = t.TypeOf<typeof EmailEmbedType>;
+export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
+export type NewsletterIllustration = t.TypeOf<
+	typeof NewsletterIllustrationType
+>;
