@@ -6,7 +6,7 @@ import {
 } from 'aws-sdk/lib/core';
 
 const Stage = process.env.STAGE ?? 'CODE';
-const Path = `/frontend/${Stage}/newsletters-api/`;
+const Path = `/frontend/${Stage}/newsletters-source/`;
 type Config = { [key: string]: string };
 
 const ssm: SSM = new SSM({
@@ -36,6 +36,7 @@ async function fetchConfig(): Promise<Config> {
 				state[name] = parameter.Value;
 			}
 		}
+		console.log(`Configuration spreadsheet: ${state['spreadsheet.id']}`);
 		return state;
 	} else {
 		return Promise.resolve(state);

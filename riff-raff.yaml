@@ -4,15 +4,15 @@ regions: [eu-west-1]
 deployments:
   cloudformation:
     type: cloud-formation
-    app: newsletters-api
+    app: newsletters-source
     parameters:
-      cloudFormationStackName: newsletters-api
+      cloudFormationStackName: newsletters-source
       templatePath: cloudformation.yaml
       cloudFormationStackByTags: false
-  newsletters-api:
+  newsletters-source:
     type: aws-lambda
     dependencies: [cloudformation]
     parameters:
       bucket: aws-frontend-artifacts
-      fileName: newsletters-api.zip
-      functionNames: [-newsletters-api-]
+      fileName: newsletters-source.zip
+      functionNames: [-newsletters-source-]

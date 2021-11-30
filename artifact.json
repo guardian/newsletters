@@ -1,9 +1,9 @@
 {
-  "projectName": "newsletters::newsletters-api",
+  "projectName": "newsletters::newsletters-source",
   "vcsURL": "https://github.com/guardian/newsletters",
   "actions": [
     {
-      "action": "newsletters-api",
+      "action": "newsletters-source",
       "path": "dist",
       "compress": "zip"
     },

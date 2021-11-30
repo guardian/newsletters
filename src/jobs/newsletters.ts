@@ -1,3 +1,4 @@
+import { strict as assert } from 'assert';
 import {
 	GROUP_INDEX,
 	prepareRows,
@@ -79,10 +80,12 @@ const rowToNewsletter = ({
 
 const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	const rows = await readNewslettersSheet();
-
-	return prepareRows(rows)
+	const newsletters = prepareRows(rows)
 		.map(rowToNewsletter)
 		.filter(EmailNewsletterType.is);
+
+	assert.ok(!!newsletters.length, 'No newsletters processed!');
+	return newsletters;
 };
 
 export { getEmailNewsletters };
