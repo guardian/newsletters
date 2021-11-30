@@ -1,14 +1,13 @@
 import { ALBResult } from 'aws-lambda';
+import { NEWSLETTERS_BUCKET_NAME } from '../constants';
 import { s3upload } from '../lib/s3Upload';
 import { getEmailNewsletters } from './newsletters';
-
-const BUCKET = 'aws-frontend-newsletters-source';
 
 const buildNewsletters = async (): Promise<ALBResult> => {
 	try {
 		const newsletters = await getEmailNewsletters();
 		await s3upload({
-			Bucket: BUCKET,
+			Bucket: NEWSLETTERS_BUCKET_NAME,
 			Key: `${process.env.STAGE}/newsletters.json`,
 			Body: JSON.stringify(newsletters),
 		});

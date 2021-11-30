@@ -2,9 +2,10 @@ import { Rule, Schedule } from '@aws-cdk/aws-events';
 import { LambdaFunction } from '@aws-cdk/aws-events-targets';
 import { Policy, PolicyStatement } from '@aws-cdk/aws-iam';
 import lambda = require('@aws-cdk/aws-lambda');
-import s3 = require('@aws-cdk/aws-s3');
+import { Bucket } from '@aws-cdk/aws-s3';
 import { Aws } from '@aws-cdk/core';
 import cdk = require('@aws-cdk/core');
+import { NEWSLETTERS_BUCKET_NAME } from '../constants';
 
 export class LambdaCronService extends cdk.Stack {
 	constructor(scope: cdk.Construct, id: string) {
@@ -22,28 +23,28 @@ export class LambdaCronService extends cdk.Stack {
 			],
 		});
 
-		const s3Policy = new PolicyStatement({
-			actions: ['s3:PutObject'],
-			resources: [
-				`arn:aws:s3:${Aws.REGION}:${Aws.ACCOUNT_ID}:aws-frontend-newsletters-source/${stage.valueAsString}/*`,
-			],
-		});
+		const newslettersBucket = Bucket.fromBucketName(
+			this,
+			'newsletters-bucket',
+			NEWSLETTERS_BUCKET_NAME,
+		);
 
-		const bucket = 'aws-frontend-artifacts';
+		const lambdaCodeBucket = 'aws-frontend-artifacts';
 		const key = `frontend/${stage.valueAsString}/newsletters-source/newsletters-source.zip`;
 
 		const handler = new lambda.Function(
 			this,
 			'frontend-newsletters-source',
 			{
+				functionName: `frontend-newsletters-source-${stage.valueAsString}`,
 				runtime: lambda.Runtime.NODEJS_14_X,
 				memorySize: 384,
 				handler: 'cron.handler',
 				code: lambda.Code.fromBucket(
-					s3.Bucket.fromBucketName(
+					Bucket.fromBucketName(
 						this,
 						'lambda-code-bucket',
-						bucket,
+						lambdaCodeBucket,
 					),
 					key,
 				),
@@ -54,15 +55,18 @@ export class LambdaCronService extends cdk.Stack {
 			},
 		);
 
+		newslettersBucket.grantWrite(handler);
+
 		handler.role?.attachInlinePolicy(
-			new Policy(this, 'ssm-parameters-policy', {
-				statements: [ssmPolicy, s3Policy],
+			new Policy(this, 'required-parameters-policies', {
+				statements: [ssmPolicy],
 			}),
 		);
 
 		const rule = new Rule(this, 'Schedule Rule', {
 			schedule: Schedule.cron({ minute: '5' }),
 		});
+
 		rule.addTarget(new LambdaFunction(handler));
 	}
 }
