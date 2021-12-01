@@ -3,7 +3,9 @@ import { buildNewsletters } from './jobs/jobs';
 
 const handler = async (event?: ScheduledEvent): Promise<ALBResult> => {
 	console.log(`Event ${JSON.stringify(event)}`);
-	return await buildNewsletters();
+	const result = await buildNewsletters();
+	console.log(`Job result ${JSON.stringify(result)}`);
+	return result;
 };
 
 const runLocal = async (): Promise<void> => {
