@@ -8,7 +8,7 @@ const buildNewsletters = async (): Promise<ALBResult> => {
 		const newsletters = await getEmailNewsletters();
 		await s3upload({
 			Bucket: NEWSLETTERS_BUCKET_NAME,
-			Key: `${process.env.STAGE}/newsletters.json`,
+			Key: `${process.env.STAGE}/newsletters`,
 			Body: JSON.stringify(newsletters),
 		});
 		return {

@@ -44,10 +44,14 @@ async function fetchConfig(): Promise<Config> {
 }
 
 export async function getConfigItem(key: string): Promise<string> {
-	const config = await fetchConfig();
-	if (config[key]) {
-		return config[key];
-	} else {
-		throw new Error(`No config value for key: ${Path}`);
+	try {
+		const config = await fetchConfig();
+		if (config[key]) {
+			return config[key];
+		} else {
+			throw new Error(`No config value for key: ${Path}`);
+		}
+	} catch (err) {
+		throw new Error(`Error retrieving AWS config: ${err}`);
 	}
 }

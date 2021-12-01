@@ -11,43 +11,47 @@ const GROUP_INDEX = 12;
 const THEME_INDEX = 13;
 
 const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
-	const serviceAccountFromConfig = await getConfigItem('google.key');
-	const serviceAccountJSON = JSON.parse(serviceAccountFromConfig);
+	try {
+		const serviceAccountFromConfig = await getConfigItem('google.key');
+		const serviceAccountJSON = JSON.parse(serviceAccountFromConfig);
 
-	const auth = new google.auth.GoogleAuth({
-		scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-	}).fromJSON(serviceAccountJSON);
+		const auth = new google.auth.GoogleAuth({
+			scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+		}).fromJSON(serviceAccountJSON);
 
-	const googleSheetsInstance = google.sheets({ version: 'v4', auth });
+		const googleSheetsInstance = google.sheets({ version: 'v4', auth });
 
-	const spreadsheetId = await getConfigItem('spreadsheet.id');
-	const { data } = await googleSheetsInstance.spreadsheets.get({
-		spreadsheetId,
-		includeGridData: true,
-		ranges: [`${SHEET_NAME}!${SHEET_RANGE}`],
-	});
+		const spreadsheetId = await getConfigItem('spreadsheet.id');
+		const { data } = await googleSheetsInstance.spreadsheets.get({
+			spreadsheetId,
+			includeGridData: true,
+			ranges: [`${SHEET_NAME}!${SHEET_RANGE}`],
+		});
 
-	assert.ok(
-		data &&
-			data.sheets &&
-			data.sheets[0] &&
-			data.sheets[0].data &&
-			data.sheets[0].data[0] &&
-			data.sheets[0].data[0].rowData &&
-			data.sheets[0].data[0].rowData,
-		'No data retrieved from spreadsheet',
-	);
+		assert.ok(
+			data &&
+				data.sheets &&
+				data.sheets[0] &&
+				data.sheets[0].data &&
+				data.sheets[0].data[0] &&
+				data.sheets[0].data[0].rowData &&
+				data.sheets[0].data[0].rowData,
+			'No data retrieved from spreadsheet',
+		);
 
-	assert.equal(
-		(
-			data.sheets[0].data[0].rowData[0]
-				?.values as sheetsV4.Schema$CellData[]
-		)[0].formattedValue,
-		SHEET_VERSION,
-		`Sheet version expected: ${SHEET_VERSION}`,
-	);
+		assert.equal(
+			(
+				data.sheets[0].data[0].rowData[0]
+					?.values as sheetsV4.Schema$CellData[]
+			)[0].formattedValue,
+			SHEET_VERSION,
+			`Sheet version expected: ${SHEET_VERSION}`,
+		);
 
-	return data.sheets[0].data[0].rowData;
+		return data.sheets[0].data[0].rowData;
+	} catch (err) {
+		throw new Error(`Error retrieving google sheet: ${err}`);
+	}
 };
 
 const isDataRow = ({ values }: sheetsV4.Schema$RowData): boolean =>

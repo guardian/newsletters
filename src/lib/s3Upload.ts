@@ -12,7 +12,13 @@ const s3upload = async ({
 	Body,
 }: PutObjectCommandInput): Promise<PutObjectCommandOutput> => {
 	const results = await s3Client.send(
-		new PutObjectCommand({ Bucket, Key, Body }),
+		new PutObjectCommand({
+			Bucket,
+			Key,
+			Body,
+			ContentType: 'application/json',
+			ACL: 'public-read',
+		}),
 	);
 	console.log(
 		`Successfully created ${Key} and uploaded it to ${Bucket}/${Key}`,
