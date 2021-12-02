@@ -9,8 +9,7 @@ const handler = async (event?: ScheduledEvent): Promise<ALBResult> => {
 };
 
 const runLocal = async (): Promise<void> => {
-	const result = await handler();
-	console.log(`Job result ${JSON.stringify(result)}`);
+	await handler();
 };
 
 if (process.env.STAGE === 'DEVELOPMENT') {
