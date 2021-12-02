@@ -49,7 +49,7 @@ export async function getConfigItem(key: string): Promise<string> {
 		if (config[key]) {
 			return config[key];
 		} else {
-			throw new Error(`No config value for key: ${Path}`);
+			throw new Error(`No config value for key: ${Path}/${key}`);
 		}
 	} catch (err) {
 		throw new Error(`Error retrieving AWS config: ${err}`);
