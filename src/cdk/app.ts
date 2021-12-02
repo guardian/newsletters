@@ -37,7 +37,7 @@ export class LambdaCronService extends Stack {
 
 		const lambdaCodeBucket = 'aws-frontend-artifacts';
 		const key = `frontend/${stage.valueAsString}/newsletters-source/newsletters-source.zip`;
-
+		// Memory usage is around 310, setting to 384
 		const handler = new lambda.Function(
 			this,
 			'frontend-newsletters-source',
