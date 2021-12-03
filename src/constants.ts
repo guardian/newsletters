@@ -1,3 +1,19 @@
 const NEWSLETTERS_BUCKET_NAME = 'aws-frontend-newsletters-source';
+const SHEET_VERSION = '0.2';
+const SHEET_NAME = 'Emails';
+const SHEET_RANGE = 'A:AC';
+const PREVIEW_INDEX = 4;
+const FREQUENCY_INDEX = 7;
+const GROUP_INDEX = 13;
+const THEME_INDEX = 14;
 
-export { NEWSLETTERS_BUCKET_NAME };
+export {
+	FREQUENCY_INDEX,
+	GROUP_INDEX,
+	NEWSLETTERS_BUCKET_NAME,
+	PREVIEW_INDEX,
+	SHEET_NAME,
+	SHEET_RANGE,
+	SHEET_VERSION,
+	THEME_INDEX,
+};

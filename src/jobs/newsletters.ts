@@ -1,10 +1,8 @@
 import { strict as assert } from 'assert';
+import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
 import {
-	GROUP_INDEX,
 	prepareRows,
-	PREVIEW_INDEX,
 	readNewslettersSheet,
-	THEME_INDEX,
 } from '../lib/googleNewsletterSheets';
 import {
 	EmailNewsletter,
@@ -26,29 +24,31 @@ const getIllustration = (
 
 const rowToNewsletter = ({
 	2: name,
+	3: restricted,
 	[PREVIEW_INDEX]: exampleUrl,
-	6: frequency,
-	9: signupPage,
+	7: frequency,
+	10: signupPage,
 	[THEME_INDEX]: theme,
 	[GROUP_INDEX]: group,
-	14: description,
-	15: listIdV1,
-	16: listId,
-	17: identityName,
-	18: brazeSubscribeEventNamePrefix,
-	19: brazeNewsletterName,
-	20: brazeSubscribeAttributeName,
-	21: mailName,
-	22: mailTitle,
-	23: mailDescription,
-	24: mailSuccessDescription,
-	25: mailHexCode,
-	26: mailImageUrl,
-	27: illustration,
+	15: description,
+	16: listIdV1,
+	17: listId,
+	18: identityName,
+	19: brazeSubscribeEventNamePrefix,
+	20: brazeNewsletterName,
+	21: brazeSubscribeAttributeName,
+	22: mailName,
+	23: mailTitle,
+	24: mailDescription,
+	25: mailSuccessDescription,
+	26: mailHexCode,
+	27: mailImageUrl,
+	28: illustration,
 }: string[]): EmailNewsletter =>
 	({
 		identityName,
 		name,
+		restricted: !!restricted,
 		brazeNewsletterName,
 		brazeSubscribeAttributeName:
 			brazeSubscribeAttributeName ||

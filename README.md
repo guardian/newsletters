@@ -19,31 +19,42 @@ Stored is AWS Systems Manager > Parameter Store, under path: /frontend/${STAGE}/
 * spreadsheet.id
 * google.key
 
-### changelog
+### Deployment
 
-Added Version in cell A1, current version 0.1
+The service is an AWS scheduled lambda, run every 5 minutes.
+The newsletters file is generated on s3 and cached by fastly on CODE and PROD.
+The urls are:
+
+* [CODE](https://newsletters.code.dev-guardianapis.com/newsletters)
+* [PROD](https://newsletters.guardianapis.com/newsletters)
+* [DEVELOPMENT](https://aws-frontend-newsletters-source.s3.eu-west-1.amazonaws.com/DEVELOPMENT/newsletters)
+
+### sheet changelog
+
+Added Version in cell A1, current version 0.2
 
 Column added:
 
 * C: displayed name
-* G: displayed frequency
-* J: signup page
-* M: group
-* N: displayed theme
-* O: description
-* P: listIdV1
-* Q: listId
-* R: identity name
-* S: brazeSubscribeEventNamePrefix
-* T: brazeNewsletterName
-* U: brazeSubscribeAttributeName blank if can be derived from brazeSubscribeEventNamePrefix
-* V: mailName blank if same as name
-* W: mailTitle blank if can be derived from name
-* X: mailDescription blank if same as description
-* Y: mailSuccessDescription
-* Z:: mailHexCode blank if default
-* AA: mailImageUrl
-* AB: illustration
+* D: restricted
+* H: displayed frequency
+* K: signup page
+* N: group
+* O: displayed theme
+* P: description
+* Q: listIdV1
+* R: listId
+* S: identity name
+* T: brazeSubscribeEventNamePrefix
+* U: brazeNewsletterName
+* V: brazeSubscribeAttributeName blank if can be derived from brazeSubscribeEventNamePrefix
+* W: mailName blank if same as name
+* X: mailTitle blank if can be derived from name
+* Y: mailDescription blank if same as description
+* Z: mailSuccessDescription
+* AA:: mailHexCode blank if default
+* AB: mailImageUrl
+* AC: illustration
 
 removed duplicate format column
 removed unused ophan column

@@ -1,14 +1,15 @@
 import { strict as assert } from 'assert';
 import { google, sheets_v4 as sheetsV4 } from 'googleapis';
+import {
+	GROUP_INDEX,
+	PREVIEW_INDEX,
+	SHEET_NAME,
+	SHEET_RANGE,
+	SHEET_VERSION,
+	THEME_INDEX,
+} from '../constants';
 import { removeSitePrefix } from '../util';
 import { getConfigItem } from '../util/config';
-
-const SHEET_VERSION = '0.1';
-const SHEET_NAME = 'Emails';
-const SHEET_RANGE = 'A:AD';
-const PREVIEW_INDEX = 3;
-const GROUP_INDEX = 12;
-const THEME_INDEX = 13;
 
 const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 	try {
@@ -97,10 +98,4 @@ const prepareRows = (rows: sheetsV4.Schema$RowData[]): string[][] => {
 		);
 };
 
-export {
-	PREVIEW_INDEX,
-	GROUP_INDEX,
-	THEME_INDEX,
-	prepareRows,
-	readNewslettersSheet,
-};
+export { prepareRows, readNewslettersSheet };
