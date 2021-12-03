@@ -8,6 +8,7 @@ describe('prepare rows', () => {
 				'1',
 				'2',
 				'3',
+				'3.1',
 				undefined,
 				'5',
 				'6',
@@ -24,6 +25,7 @@ describe('prepare rows', () => {
 				'1',
 				'2',
 				'3',
+				'3.1',
 				'not filtered',
 				'5',
 				'6',
@@ -40,6 +42,7 @@ describe('prepare rows', () => {
 				'1',
 				'2',
 				'3',
+				'3.1',
 				'4',
 				'5',
 				'6',
@@ -56,6 +59,7 @@ describe('prepare rows', () => {
 				'1',
 				'2',
 				'3',
+				'3.1',
 				'4',
 				'5',
 				'6',
@@ -76,6 +80,7 @@ describe('prepare rows', () => {
 					{ formattedValue: '1' },
 					{ formattedValue: '2' },
 					{ formattedValue: '3' },
+					{ formattedValue: '3.1' },
 					{
 						formattedValue: 'filtered',
 						userEnteredFormat: {
@@ -99,6 +104,7 @@ describe('prepare rows', () => {
 					{ formattedValue: '1' },
 					{ formattedValue: '2' },
 					{ formattedValue: '3' },
+					{ formattedValue: '3.1' },
 					{
 						formattedValue: 'not filtered',
 						userEnteredFormat: {
@@ -122,6 +128,7 @@ describe('prepare rows', () => {
 					{ formattedValue: '1' },
 					{ formattedValue: '2' },
 					{ formattedValue: '3' },
+					{ formattedValue: '3.1' },
 					{ formattedValue: '4' },
 					{ formattedValue: '5' },
 					{ formattedValue: '6' },
@@ -140,6 +147,7 @@ describe('prepare rows', () => {
 					{ formattedValue: '1' },
 					{ formattedValue: '2' },
 					{ formattedValue: '3' },
+					{ formattedValue: '3.1' },
 					{ formattedValue: '4' },
 					{ formattedValue: '5' },
 					{ formattedValue: '6' },

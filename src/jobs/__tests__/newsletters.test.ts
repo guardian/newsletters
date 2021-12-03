@@ -1,3 +1,4 @@
+import { FREQUENCY_INDEX } from '../../constants';
 import * as mock from '../../lib/googleNewsletterSheets';
 import { replaceLastSpaceByNonBreakingSpace } from '../../util';
 import { getEmailNewsletters } from '../newsletters';
@@ -19,6 +20,7 @@ const EXPECTED_RESULTS = [
 		exampleUrl: '/world/series/the-upside-weekly-report/latest/email',
 		signupPage:
 			'/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
+		restricted: false,
 		emailEmbed: {
 			name: 'Email name, if not present default to name',
 			title: replaceLastSpaceByNonBreakingSpace(
@@ -43,6 +45,7 @@ const VALID_NEWSLETTER_ENTRY = [
 	'FEATURES',
 	'The Upside',
 	'The Upside',
+	'',
 	'/world/series/the-upside-weekly-report/latest/email',
 	'Series of same name',
 	'Weekly, Friday/ad usually, ~12-2pm',
@@ -88,7 +91,7 @@ describe('Newsletters service', () => {
 	it('filters incomplete newsletter entry', async () => {
 		const mockResponse = [
 			VALID_NEWSLETTER_ENTRY,
-			[...(VALID_NEWSLETTER_ENTRY.slice()[6] = '')],
+			[...(VALID_NEWSLETTER_ENTRY.slice()[FREQUENCY_INDEX] = '')],
 		];
 
 		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());

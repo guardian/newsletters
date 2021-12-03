@@ -29,6 +29,7 @@ export const EmailNewsletterType = t.type({
 	brazeSubscribeEventNamePrefix: NonEmptyString,
 	brazeNewsletterName: NonEmptyString,
 	emailEmbed: EmailEmbedType,
+	restricted: t.boolean,
 	signupPage: optional(t.string),
 	exampleUrl: optional(t.string),
 	illustration: optional(NewsletterIllustrationType),
