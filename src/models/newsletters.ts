@@ -33,6 +33,8 @@ export const EmailNewsletterType = t.type({
 	signupPage: optional(t.string),
 	exampleUrl: optional(t.string),
 	illustration: optional(NewsletterIllustrationType),
+	campaignName: optional(t.string),
+	campaignCode: optional(t.string),
 });
 
 export type EmailEmbed = t.TypeOf<typeof EmailEmbedType>;

@@ -44,6 +44,8 @@ const rowToNewsletter = ({
 	26: mailHexCode,
 	27: mailImageUrl,
 	28: illustration,
+	29: campaignName,
+	30: campaignCode,
 }: string[]): EmailNewsletter =>
 	({
 		identityName,
@@ -76,6 +78,10 @@ const rowToNewsletter = ({
 			imageUrl: mailImageUrl?.length > 0 ? mailImageUrl : undefined,
 		},
 		illustration: getIllustration(illustration),
+		campaignName: campaignName?.includes('not in ophan')
+			? ''
+			: campaignName,
+		campaignCode,
 	} as EmailNewsletter);
 
 const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
