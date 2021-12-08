@@ -38,6 +38,8 @@ const EXPECTED_RESULTS = [
 		illustration: {
 			circle: 'illustration',
 		},
+		campaignName: 'testCampaignName',
+		campaignCode: 'testCampaignCode',
 	},
 ];
 
@@ -71,6 +73,8 @@ const VALID_NEWSLETTER_ENTRY = [
 	'',
 	'imageUrl',
 	'illustration',
+	'testCampaignName',
+	'testCampaignCode',
 ];
 describe('Newsletters service', () => {
 	beforeEach(() => {

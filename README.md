@@ -31,7 +31,16 @@ The urls are:
 
 ### sheet changelog
 
-Added Version in cell A1, current version 0.2
+Version in cell A1
+
+#### 0.3
+
+Column added:
+
+* AD: campaignName
+* AE: campaignCode
+
+#### 0.2
 
 Column added:
 
