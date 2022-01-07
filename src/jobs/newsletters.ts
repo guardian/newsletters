@@ -79,7 +79,7 @@ const rowToNewsletter = ({
 		},
 		illustration: getIllustration(illustration),
 		campaignName: campaignName?.includes('not in ophan')
-			? ''
+			? undefined
 			: campaignName,
 		campaignCode,
 	} as EmailNewsletter);
