@@ -26,6 +26,7 @@ export const EmailNewsletterType = t.type({
 	listId: t.number,
 	listIdV1: t.number,
 	brazeSubscribeAttributeName: NonEmptyString,
+	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: NonEmptyString,
 	brazeNewsletterName: NonEmptyString,
 	emailEmbed: EmailEmbedType,

@@ -40,6 +40,10 @@ const EXPECTED_RESULTS = [
 		},
 		campaignName: 'testCampaignName',
 		campaignCode: 'testCampaignCode',
+		brazeSubscribeAttributeNameAlternate: [
+			'brazeSubscribeAttributeNameAlternate1',
+			'brazeSubscribeAttributeNameAlternate2',
+		],
 	},
 ];
 
@@ -75,6 +79,7 @@ const VALID_NEWSLETTER_ENTRY = [
 	'illustration',
 	'testCampaignName',
 	'testCampaignCode',
+	'brazeSubscribeAttributeNameAlternate1, brazeSubscribeAttributeNameAlternate2',
 ];
 describe('Newsletters service', () => {
 	beforeEach(() => {
