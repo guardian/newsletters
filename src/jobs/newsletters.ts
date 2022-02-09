@@ -46,6 +46,7 @@ const rowToNewsletter = ({
 	28: illustration,
 	29: campaignName,
 	30: campaignCode,
+	31: brazeSubscribeAttributeNameAlternate,
 }: string[]): EmailNewsletter =>
 	({
 		identityName,
@@ -79,9 +80,13 @@ const rowToNewsletter = ({
 		},
 		illustration: getIllustration(illustration),
 		campaignName: campaignName?.includes('not in ophan')
-			? ''
+			? undefined
 			: campaignName,
 		campaignCode,
+		brazeSubscribeAttributeNameAlternate:
+			brazeSubscribeAttributeNameAlternate
+				?.split(',')
+				?.map((a) => a.trim()),
 	} as EmailNewsletter);
 
 const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
