@@ -44,6 +44,8 @@ const EXPECTED_RESULTS = [
 			'brazeSubscribeAttributeNameAlternate1',
 			'brazeSubscribeAttributeNameAlternate2',
 		],
+		paused: true,
+		emailConfirmation: true,
 	},
 ];
 
@@ -52,6 +54,8 @@ const VALID_NEWSLETTER_ENTRY = [
 	'The Upside',
 	'The Upside',
 	'',
+	'TRUE',
+	'TRUE',
 	'/world/series/the-upside-weekly-report/latest/email',
 	'Series of same name',
 	'Weekly, Friday/ad usually, ~12-2pm',
