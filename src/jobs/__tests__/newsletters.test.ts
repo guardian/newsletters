@@ -28,8 +28,7 @@ const EXPECTED_RESULTS = [
 			),
 			description:
 				"News doesn’t have to be bad. Get a weekly shot of optimism with real solutions to the world's most pressing problems.",
-			successHeadline:
-				'Check your email inbox and confirm your subscription',
+			successHeadline: 'Subscription confirmed',
 			successDescription:
 				"Thanks for subscribing. We'll send you The Upside every week",
 			hexCode: '#DCDCDC',
@@ -45,7 +44,7 @@ const EXPECTED_RESULTS = [
 			'brazeSubscribeAttributeNameAlternate2',
 		],
 		paused: true,
-		emailConfirmation: true,
+		emailConfirmation: false,
 	},
 ];
 
@@ -55,7 +54,7 @@ const VALID_NEWSLETTER_ENTRY = [
 	'The Upside',
 	'',
 	'TRUE',
-	'TRUE',
+	'',
 	'/world/series/the-upside-weekly-report/latest/email',
 	'Series of same name',
 	'Weekly, Friday/ad usually, ~12-2pm',

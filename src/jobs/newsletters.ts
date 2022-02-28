@@ -75,8 +75,9 @@ const rowToNewsletter = ({
 				mailTitle || `Sign up for ${mailName || name}`,
 			),
 			description: mailDescription ? mailDescription : description,
-			successHeadline:
-				'Check your email inbox and confirm your subscription',
+			successHeadline: emailConfirmation
+				? 'Check your email inbox and confirm your subscription'
+				: 'Subscription confirmed',
 			successDescription:
 				mailSuccessDescription || 'Thanks for subscribing!',
 			hexCode: mailHexCode || '#DCDCDC',
