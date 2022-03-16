@@ -53,9 +53,9 @@ const rowToNewsletter = ({
 	({
 		identityName,
 		name,
-		restricted: !!restricted,
-		paused: !!paused,
-		emailConfirmation: !!emailConfirmation,
+		restricted: restricted == 'TRUE',
+		paused: paused == 'TRUE',
+		emailConfirmation: emailConfirmation == 'TRUE',
 		brazeNewsletterName,
 		brazeSubscribeAttributeName:
 			brazeSubscribeAttributeName ||
