@@ -69,12 +69,6 @@ const VALID_NEWSLETTER_ENTRY = [
 	'',
 	'/world/series/the-upside-weekly-report/latest/email',
 	'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
-	'Series of same name',
-	'Weekly, Friday/ad usually, ~12-2pm',
-	'Article',
-	'A contact',
-	'',
-	'world/series/the-upside',
 	'Email name, if not present default to name',
 	'Email title, if not present default Sign up for + title',
 	"News doesn’t have to be bad. Get a weekly shot of optimism with real solutions to the world's most pressing problems.",
@@ -82,6 +76,12 @@ const VALID_NEWSLETTER_ENTRY = [
 	'',
 	'imageUrl',
 	'illustration',
+	'Series of same name',
+	'Weekly, Friday/ad usually, ~12-2pm',
+	'Article',
+	'A contact',
+	'',
+	'world/series/the-upside',
 ];
 
 describe('Newsletters service', () => {
