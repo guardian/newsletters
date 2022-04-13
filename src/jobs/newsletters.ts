@@ -22,6 +22,9 @@ const getIllustration = (
 	return { circle };
 };
 
+const isTrue = (str: string | undefined): boolean =>
+	str !== undefined ? str.toLowerCase() === 'true' : false;
+
 const rowToNewsletter = ({
 	[THEME_INDEX]: theme,
 	[GROUP_INDEX]: group,
@@ -53,9 +56,9 @@ const rowToNewsletter = ({
 	({
 		identityName,
 		name,
-		restricted: restricted == 'TRUE',
-		paused: paused == 'TRUE',
-		emailConfirmation: emailConfirmation == 'TRUE',
+		restricted: isTrue(restricted),
+		paused: isTrue(paused),
+		emailConfirmation: isTrue(emailConfirmation),
 		brazeNewsletterName,
 		brazeSubscribeAttributeName:
 			brazeSubscribeAttributeName ||
@@ -75,7 +78,7 @@ const rowToNewsletter = ({
 				mailTitle || `Sign up for ${mailName || name}`,
 			),
 			description: mailDescription ? mailDescription : description,
-			successHeadline: emailConfirmation
+			successHeadline: isTrue(emailConfirmation)
 				? 'Check your email inbox and confirm your subscription'
 				: 'Subscription confirmed',
 			successDescription:
