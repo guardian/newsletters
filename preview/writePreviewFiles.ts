@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
+import { NonEmptyString } from 'io-ts-types';
 import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
 	EmailNewsletter,
@@ -34,21 +35,37 @@ const getNewslettersFromLocalCsv = async (): Promise<EmailNewsletter[]> => {
 	const csvData = await readFileSync('./preview/sampleData.csv').toString();
 	const rows = csvData.split('\n').filter((_) => _.length > 0);
 	const cellsInRows = rows.map(splitAtCommasNotInQuotes);
-	let lastGroup = '';
 
-	cellsInRows.forEach((row) => {
-		if (row[0]) {
-			lastGroup = row[0];
+	const newsletters = cellsInRows.map(rowToNewsletter);
+
+	let lastGroup = '_NO_GROUP_';
+	let lastTheme = '_NO_Theme_';
+
+	newsletters.forEach((newsletter) => {
+		if (newsletter.group) {
+			lastGroup = newsletter.group;
+		} else {
+			newsletter.group = lastGroup as NonEmptyString;
 		}
-		row[0] = lastGroup;
+		if (newsletter.theme) {
+			lastTheme = newsletter.theme;
+		} else {
+			newsletter.theme = lastTheme as NonEmptyString;
+		}
 	});
 
-	console.log('index\tmatch\tname');
-	cellsInRows.forEach((row, index) => {
-		console.log(index, '\t', EmailNewsletterType.is(row), '\t', row[1]);
+	console.log('INDEX\t MATCH\t NAME');
+	newsletters.forEach((newsletter, index) => {
+		console.log(
+			index,
+			'\t',
+			EmailNewsletterType.is(newsletter),
+			'\t',
+			newsletter.name,
+		);
 	});
 
-	return cellsInRows.map(rowToNewsletter);
+	return newsletters.filter(EmailNewsletterType.is);
 };
 
 const populateTemplate = async (): Promise<void> => {
