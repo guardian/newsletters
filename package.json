@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/cron.ts",
     "preview": "ts-node-dev --transpile-only preview/writePreviewFiles.ts",
+    "preview-live-data": "USE_LIVE_DATA=TRUE ts-node-dev --transpile-only preview/writePreviewFiles.ts",
     "build": "tsc",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc",
