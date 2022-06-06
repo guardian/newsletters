@@ -8,8 +8,8 @@
   "private": true,
   "scripts": {
     "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/cron.ts",
-    "preview": "ts-node-dev --transpile-only src/preview.ts",
-    "preview-live-data": "USE_LIVE_DATA=TRUE ts-node-dev --transpile-only src/preview.ts",
+    "preview": "ts-node-dev --transpile-only preview/index.ts",
+    "preview-live-data": "USE_LIVE_DATA=TRUE ts-node-dev --transpile-only preview/index.ts",
     "build": "tsc",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc",
