@@ -35,12 +35,14 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
 	const cellsInRows = parseStringifiedCSV(csvData);
-	const unverifiedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
+	// rowToNewsletter casts its results as EmailNewsletter, but doesn't validate
+	// the values - this is done later by EmailNewsletterType.is
+	const unvalidatedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
 	let lastGroup = '_NO_GROUP_';
 	let lastTheme = '_NO_Theme_';
 
-	unverifiedNewsletters.forEach((newsletter) => {
+	unvalidatedNewsletters.forEach((newsletter) => {
 		if (newsletter.group) {
 			lastGroup = newsletter.group;
 		} else {
@@ -53,8 +55,8 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 		}
 	});
 
-	logFeedback(cellsInRows[0][0], unverifiedNewsletters);
-	return unverifiedNewsletters.filter(EmailNewsletterType.is);
+	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
+	return unvalidatedNewsletters.filter(EmailNewsletterType.is);
 };
 
 const writePreviewJson = async (): Promise<void> => {
