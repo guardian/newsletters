@@ -5,39 +5,14 @@ import {
 	EmailNewsletter,
 	EmailNewsletterType,
 } from '../src/models/newsletters';
+import { parseStringifiedCSV } from '../src/util/csv';
 
 const USE_LIVE_DATA = !!process.env.USE_LIVE_DATA;
 console.log({ USE_LIVE_DATA });
 
-const splitWhenNotInQuotes = (input: string, delimiter: string): string[] => {
-	let pos = 0;
-	let inQuotes = false;
-	const output = [];
-	let part = '';
-
-	for (pos = 0; pos < input.length; pos++) {
-		const c = input[pos];
-		if (c === '"') {
-			inQuotes = !inQuotes;
-		}
-		if (c === delimiter && !inQuotes) {
-			output.push(part);
-			part = '';
-		} else {
-			part += c;
-		}
-	}
-
-	return output;
-};
-
 const getNewslettersFromLocalCsv = async (): Promise<EmailNewsletter[]> => {
 	const csvData = await readFileSync('./preview/sampleData.csv').toString();
-
-	const rows = splitWhenNotInQuotes(csvData, '\n').filter(
-		(_) => _.length > 0,
-	);
-	const cellsInRows = rows.map((_) => splitWhenNotInQuotes(_, ','));
+	const cellsInRows = parseStringifiedCSV(csvData);
 	const versionNumber = cellsInRows[0][0];
 	const newsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
