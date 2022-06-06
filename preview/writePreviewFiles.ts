@@ -9,7 +9,7 @@ import {
 const USE_LIVE_DATA = !!process.env.USE_LIVE_DATA;
 console.log({ USE_LIVE_DATA });
 
-const splitAtCommasNotInQuotes = (input: string): string[] => {
+const splitWhenNotInQuotes = (input: string, delimiter: string): string[] => {
 	let pos = 0;
 	let inQuotes = false;
 	const output = [];
@@ -20,7 +20,7 @@ const splitAtCommasNotInQuotes = (input: string): string[] => {
 		if (c === '"') {
 			inQuotes = !inQuotes;
 		}
-		if (c === ',' && !inQuotes) {
+		if (c === delimiter && !inQuotes) {
 			output.push(part);
 			part = '';
 		} else {
@@ -33,10 +33,13 @@ const splitAtCommasNotInQuotes = (input: string): string[] => {
 
 const getNewslettersFromLocalCsv = async (): Promise<EmailNewsletter[]> => {
 	const csvData = await readFileSync('./preview/sampleData.csv').toString();
-	const rows = csvData.split('\n').filter((_) => _.length > 0);
-	const cellsInRows = rows.map(splitAtCommasNotInQuotes);
 
-	const newsletters = cellsInRows.map(rowToNewsletter);
+	const rows = splitWhenNotInQuotes(csvData, '\n').filter(
+		(_) => _.length > 0,
+	);
+	const cellsInRows = rows.map((_) => splitWhenNotInQuotes(_, ','));
+	const versionNumber = cellsInRows[0][0];
+	const newsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
 	let lastGroup = '_NO_GROUP_';
 	let lastTheme = '_NO_Theme_';
@@ -54,6 +57,7 @@ const getNewslettersFromLocalCsv = async (): Promise<EmailNewsletter[]> => {
 		}
 	});
 
+	console.log({ versionNumber });
 	console.log('INDEX\t MATCH\t NAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
