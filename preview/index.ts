@@ -16,7 +16,7 @@ const logFeedback = (
 	newsletters: EmailNewsletter[],
 ): void => {
 	console.log({ versionNumber });
-	console.log('INDEX\t MATCH\t NAME');
+	console.log('INDEX\t VALID\t NAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
 			index,
@@ -39,8 +39,13 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	// the values - this is done later by EmailNewsletterType.is
 	const unvalidatedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
-	let lastGroup = '_NO_GROUP_';
-	let lastTheme = '_NO_Theme_';
+	// The spreadsheet only fills the 'group' and 'theme' column when they change
+	// so the values need to be filled from the last non-empty value from a previous
+	// row.
+	// If the first row of data does not have these columns populated, the first
+	// group will have empty values, so will fail the EmailNewsletterType.is test
+	let lastGroup = '';
+	let lastTheme = '';
 
 	unvalidatedNewsletters.forEach((newsletter) => {
 		if (newsletter.group) {
