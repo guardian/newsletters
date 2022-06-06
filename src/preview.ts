@@ -1,11 +1,8 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { NonEmptyString } from 'io-ts-types';
-import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
-import {
-	EmailNewsletter,
-	EmailNewsletterType,
-} from '../src/models/newsletters';
-import { parseStringifiedCSV } from '../src/util/csv';
+import { getEmailNewsletters, rowToNewsletter } from './jobs/newsletters';
+import { EmailNewsletter, EmailNewsletterType } from './models/newsletters';
+import { parseStringifiedCSV } from './util/csv';
 
 const USE_LIVE_DATA = !!process.env.USE_LIVE_DATA;
 console.log({ USE_LIVE_DATA });
