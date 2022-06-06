@@ -23,7 +23,7 @@ const logFeedback = (
 			'\t',
 			EmailNewsletterType.is(newsletter),
 			'\t',
-			newsletter.name,
+			newsletter.name + (newsletter.cancelled ? ' (CANCELLED)' : ''),
 		);
 	});
 };
@@ -37,8 +37,8 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	const cellsInRows = parseStringifiedCSV(csvData);
 	const unverifiedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
-	let lastGroup = '_NO_GROUP_';
-	let lastTheme = '_NO_Theme_';
+	let lastGroup = '';
+	let lastTheme = '';
 
 	unverifiedNewsletters.forEach((newsletter) => {
 		if (newsletter.group) {
