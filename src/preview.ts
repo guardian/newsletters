@@ -5,7 +5,8 @@ import { EmailNewsletter, EmailNewsletterType } from './models/newsletters';
 import { parseStringifiedCSV } from './util/csv';
 
 const USE_LIVE_DATA = !!process.env.USE_LIVE_DATA;
-console.log({ USE_LIVE_DATA });
+const PREVIEW_OUTPUT_FILE_PATH = './preview/preview.json';
+const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
 const logFeedback = (
 	versionNumber: string,
@@ -24,8 +25,12 @@ const logFeedback = (
 	});
 };
 
-const getNewslettersFromLocalCsv = async (): Promise<EmailNewsletter[]> => {
-	const csvData = await readFileSync('./preview/sampleData.csv').toString();
+const getEmailNewslettersFromLocalCsv = async (): Promise<
+	EmailNewsletter[]
+> => {
+	const csvData = await readFileSync(
+		PREVIEW_DATA_SOURCE_FILE_PATH,
+	).toString();
 	const cellsInRows = parseStringifiedCSV(csvData);
 	const unverifiedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
@@ -50,12 +55,17 @@ const getNewslettersFromLocalCsv = async (): Promise<EmailNewsletter[]> => {
 };
 
 const writePreviewJson = async (): Promise<void> => {
+	console.log(
+		`\nGenerating preview at ${PREVIEW_OUTPUT_FILE_PATH}, using ${
+			USE_LIVE_DATA ? 'live data' : PREVIEW_DATA_SOURCE_FILE_PATH
+		}`,
+	);
 	const data = USE_LIVE_DATA
 		? await getEmailNewsletters()
-		: await getNewslettersFromLocalCsv();
+		: await getEmailNewslettersFromLocalCsv();
 	const dataString = JSON.stringify(data);
 
-	await writeFileSync('./preview/preview.json', dataString);
+	await writeFileSync(PREVIEW_OUTPUT_FILE_PATH, dataString);
 };
 
 writePreviewJson();
