@@ -16,7 +16,7 @@ const splitWhenNotInQuotes = (input: string, delimiter: string): string[] => {
 			part += c;
 		}
 	}
-
+	output.push(part);
 	return output;
 };
 
