@@ -5,7 +5,7 @@ import {
 	EmailNewsletter,
 	EmailNewsletterType,
 } from '../src/models/newsletters';
-import { parseStringifiedCSV } from '../src/util/csv';
+import { parseStringifiedCSV } from './csv';
 
 const USE_LIVE_DATA = !!process.env.USE_LIVE_DATA;
 const PREVIEW_OUTPUT_FILE_PATH = './preview/preview.json';
