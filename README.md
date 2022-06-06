@@ -9,6 +9,8 @@ Cron job which create a newsletter file from the newsletter master sheet
 * `yarn install` to install the dependencies
 * `yarn dev` to run the job
 * `yarn test` to run the tests
+* `yarn preview` to generate a local JSON file in the `/preview` folder, using the `/preview/sampleData.csv`
+* `yarn preview-code-data` to generate a local JSON file in the `/preview` folder, using data from CODE
 
 Running the application locally uses the DEVELOPMENT stage.
 
