@@ -7,7 +7,7 @@ import {
 } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
 
-const USE_LIVE_DATA = !!process.env.USE_LIVE_DATA;
+const USE_CODE_DATA = !!process.env.USE_CODE_DATA;
 const PREVIEW_OUTPUT_FILE_PATH = './preview/preview.json';
 const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
@@ -67,10 +67,10 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 const writePreviewJson = async (): Promise<void> => {
 	console.log(
 		`\nGenerating preview at ${PREVIEW_OUTPUT_FILE_PATH}, using ${
-			USE_LIVE_DATA ? 'live data' : PREVIEW_DATA_SOURCE_FILE_PATH
+			USE_CODE_DATA ? 'data from CODE' : PREVIEW_DATA_SOURCE_FILE_PATH
 		}`,
 	);
-	const data = USE_LIVE_DATA
+	const data = USE_CODE_DATA
 		? await getEmailNewsletters()
 		: await getEmailNewslettersFromLocalCsv();
 	const dataString = JSON.stringify(data);
