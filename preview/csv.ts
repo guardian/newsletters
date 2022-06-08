@@ -1,10 +1,9 @@
 const splitWhenNotInQuotes = (input: string, delimiter: string): string[] => {
-	let pos = 0;
 	let inQuotes = false;
 	const output = [];
 	let part = '';
 
-	for (pos = 0; pos < input.length; pos++) {
+	for (let pos = 0; pos < input.length; pos++) {
 		const c = input[pos];
 		if (c === '"') {
 			inQuotes = !inQuotes;
