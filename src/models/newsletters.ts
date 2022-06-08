@@ -19,6 +19,7 @@ const EmailEmbedType = t.type({
 const baseNewsletterModel = {
 	name: NonEmptyString,
 	identityName: NonEmptyString,
+	cancelled: t.boolean,
 	theme: NonEmptyString,
 	group: NonEmptyString,
 	description: NonEmptyString,
@@ -50,7 +51,6 @@ export const CurrentEmailNewsletterType = t.type({
 });
 export const EmailNewsletterType = t.type({
 	...baseNewsletterModel,
-	cancelled: t.boolean,
 });
 
 export type EmailEmbed = t.TypeOf<typeof EmailEmbedType>;
@@ -60,8 +60,7 @@ export type CurrentEmailNewsletter = t.TypeOf<
 export type CancelledEmailNewsletter = t.TypeOf<
 	typeof CancelledEmailNewsletterType
 >;
-export type EmailNewsletter = CurrentEmailNewsletter | CancelledEmailNewsletter;
-
+export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationType
 >;
