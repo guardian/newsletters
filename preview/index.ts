@@ -2,8 +2,10 @@ import { readFileSync, writeFileSync } from 'fs';
 import { NonEmptyString } from 'io-ts-types';
 import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
-	EmailNewsletter,
 	EmailNewsletterType,
+	CancelledEmailNewsletterType,
+	CurrentEmailNewsletter,
+	CurrentEmailNewsletterType,
 } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
 
@@ -13,37 +15,41 @@ const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
 const logFeedback = (
 	versionNumber: string,
-	newsletters: EmailNewsletter[],
+	newsletters: CurrentEmailNewsletter[],
 ): void => {
 	console.log({ versionNumber });
-	console.log('INDEX\t VALID\t NAME');
+	console.log('INDEX\tVALID\tCurrent\t CANCELLED\tNAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
 			index,
 			'\t',
 			EmailNewsletterType.is(newsletter),
 			'\t',
+			CurrentEmailNewsletterType.is(newsletter),
+			'\t',
+			CancelledEmailNewsletterType.is(newsletter),
+			'\t\t',
 			newsletter.name,
 		);
 	});
 };
 
 const getEmailNewslettersFromLocalCsv = async (): Promise<
-	EmailNewsletter[]
+	CurrentEmailNewsletter[]
 > => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
 	const cellsInRows = parseStringifiedCSV(csvData);
 	// rowToNewsletter casts its results as EmailNewsletter, but doesn't validate
-	// the values - this is done later by EmailNewsletterType.is
+	// the values - this is done later by CurrentEmailNewsletter.is
 	const unvalidatedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
 	// The spreadsheet only fills the 'group' and 'theme' column when they change
 	// so the values need to be filled from the last non-empty value from a previous
 	// row.
 	// If the first row of data does not have these columns populated, the first
-	// group will have empty values, so will fail the EmailNewsletterType.is test
+	// group will have empty values, so will fail the CurrentEmailNewsletter.is test
 	let lastGroup = '';
 	let lastTheme = '';
 
@@ -61,7 +67,7 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	});
 
 	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
-	return unvalidatedNewsletters.filter(EmailNewsletterType.is);
+	return unvalidatedNewsletters.filter(CurrentEmailNewsletterType.is);
 };
 
 const writePreviewJson = async (): Promise<void> => {

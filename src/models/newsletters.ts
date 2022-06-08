@@ -16,7 +16,7 @@ const EmailEmbedType = t.type({
 	imageUrl: optional(t.string), //deprecated
 });
 
-export const EmailNewsletterType = t.type({
+const baseNewsletterModel = {
 	name: NonEmptyString,
 	identityName: NonEmptyString,
 	theme: NonEmptyString,
@@ -31,7 +31,6 @@ export const EmailNewsletterType = t.type({
 	brazeNewsletterName: NonEmptyString,
 	emailEmbed: EmailEmbedType,
 	restricted: t.boolean,
-	cancelled: t.boolean,
 	paused: t.boolean,
 	emailConfirmation: t.boolean,
 	signupPage: optional(t.string),
@@ -39,10 +38,30 @@ export const EmailNewsletterType = t.type({
 	illustration: optional(NewsletterIllustrationType),
 	campaignName: optional(t.string),
 	campaignCode: optional(t.string),
+};
+
+export const CancelledEmailNewsletterType = t.type({
+	...baseNewsletterModel,
+	cancelled: t.literal(true),
+});
+export const CurrentEmailNewsletterType = t.type({
+	...baseNewsletterModel,
+	cancelled: t.literal(false),
+});
+export const EmailNewsletterType = t.type({
+	...baseNewsletterModel,
+	cancelled: t.boolean,
 });
 
 export type EmailEmbed = t.TypeOf<typeof EmailEmbedType>;
-export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
+export type CurrentEmailNewsletter = t.TypeOf<
+	typeof CurrentEmailNewsletterType
+>;
+export type CancelledEmailNewsletter = t.TypeOf<
+	typeof CancelledEmailNewsletterType
+>;
+export type EmailNewsletter = CurrentEmailNewsletter | CancelledEmailNewsletter;
+
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationType
 >;
