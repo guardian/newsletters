@@ -107,4 +107,4 @@ const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	return newsletters;
 };
 
-export { getEmailNewsletters };
+export { getEmailNewsletters, rowToNewsletter };

@@ -25,3 +25,5 @@ yarn-error.log*
 
 cloudformation.yaml
 cdk.out/
+
+preview/preview.json
