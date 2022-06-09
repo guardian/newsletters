@@ -35,6 +35,11 @@ The urls are:
 
 Version in cell A1
 
+#### 0.7
+
+Column added:
+* D: cancelled
+
 #### 0.3
 
 Column added:
