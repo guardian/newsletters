@@ -1,12 +1,15 @@
-import { FREQUENCY_INDEX } from '../../constants';
 import * as mock from '../../lib/googleNewsletterSheets';
 import { replaceLastSpaceByNonBreakingSpace } from '../../util';
 import { getEmailNewsletters } from '../newsletters';
+
+const FREQUENCY_INDEX = 5;
+const CANCELLED_INDEX = 3;
 
 const EXPECTED_RESULTS = [
 	{
 		identityName: 'the-upside',
 		name: 'The Upside',
+		cancelled: false,
 		brazeNewsletterName: 'Editorial_TheUpside',
 		brazeSubscribeAttributeName: 'TheUpside_Subscribe_Email',
 		brazeSubscribeEventNamePrefix: 'the_upside',
@@ -52,6 +55,7 @@ const VALID_NEWSLETTER_ENTRY = [
 	'FEATURES',
 	'The Upside',
 	'Features',
+	'FALSE',
 	'The Upside',
 	'Weekly',
 	'Journalism that uncovers real solutions: people, movements and innovations offering answers to our most pressing problems. We’ll round up the best articles for you every week.',
@@ -84,6 +88,18 @@ const VALID_NEWSLETTER_ENTRY = [
 	'world/series/the-upside',
 ];
 
+const NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY = [
+	...VALID_NEWSLETTER_ENTRY.slice(0, FREQUENCY_INDEX),
+	'',
+	...VALID_NEWSLETTER_ENTRY.slice(FREQUENCY_INDEX + 1),
+];
+
+const CANCELLED_NEWSLETTER_ENTRY = [
+	...VALID_NEWSLETTER_ENTRY.slice(0, CANCELLED_INDEX),
+	'TRUE',
+	...VALID_NEWSLETTER_ENTRY.slice(CANCELLED_INDEX + 1),
+];
+
 describe('Newsletters service', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -103,7 +119,7 @@ describe('Newsletters service', () => {
 	it('filters incomplete newsletter entry', async () => {
 		const mockResponse = [
 			VALID_NEWSLETTER_ENTRY,
-			[...(VALID_NEWSLETTER_ENTRY.slice()[FREQUENCY_INDEX] = '')],
+			NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY,
 		];
 
 		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
@@ -111,6 +127,20 @@ describe('Newsletters service', () => {
 
 		const got = await getEmailNewsletters();
 
+		expect(mock.readNewslettersSheet).toBeCalled();
+		expect(got).toEqual(EXPECTED_RESULTS);
+	});
+
+	it('filters cancelled newsletter entry', async () => {
+		const mockResponse = [
+			VALID_NEWSLETTER_ENTRY,
+			CANCELLED_NEWSLETTER_ENTRY,
+		];
+
+		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
+		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
+
+		const got = await getEmailNewsletters();
 		expect(mock.readNewslettersSheet).toBeCalled();
 		expect(got).toEqual(EXPECTED_RESULTS);
 	});

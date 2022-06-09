@@ -2,10 +2,10 @@ import { readFileSync, writeFileSync } from 'fs';
 import { NonEmptyString } from 'io-ts-types';
 import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
-	EmailNewsletterType,
 	CancelledEmailNewsletterType,
 	CurrentEmailNewsletter,
 	CurrentEmailNewsletterType,
+	EmailNewsletterType,
 } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
 
