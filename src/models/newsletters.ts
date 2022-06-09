@@ -6,14 +6,28 @@ const NewsletterIllustrationType = t.type({
 	circle: t.string,
 });
 
-const EmailEmbedType = t.type({
+const baseEmailEmbedModel = {
 	name: NonEmptyString,
 	title: NonEmptyString,
-	description: NonEmptyString,
+	description: optional(t.string),
 	successHeadline: NonEmptyString,
 	successDescription: NonEmptyString,
 	hexCode: NonEmptyString,
 	imageUrl: optional(t.string), //deprecated
+};
+
+const EmailEmbedType = t.type({
+	...baseEmailEmbedModel,
+});
+
+// the value for EmailNewsletter.emailEmbed.description comes from the
+// "mailDescription" cell or if that if empty, the "description" cell.
+// As EmailNewsletter.description (from the "description" cell) is
+// NonEmptyString for a CurrentEmailNewsletter, so should
+// EmailNewsletter.emailEmbed.description.
+const EmailEmbedWithDescriptionType = t.type({
+	...baseEmailEmbedModel,
+	description: NonEmptyString,
 });
 
 const baseNewsletterModel = {
@@ -22,7 +36,7 @@ const baseNewsletterModel = {
 	cancelled: t.boolean,
 	theme: NonEmptyString,
 	group: NonEmptyString,
-	description: NonEmptyString,
+	description: optional(t.string),
 	frequency: optional(t.string),
 	listId: t.number,
 	listIdV1: t.number,
@@ -30,7 +44,7 @@ const baseNewsletterModel = {
 	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: optional(t.string),
 	brazeNewsletterName: optional(t.string),
-	emailEmbed: optional(EmailEmbedType),
+	emailEmbed: EmailEmbedType,
 	restricted: t.boolean,
 	paused: t.boolean,
 	emailConfirmation: t.boolean,
@@ -48,18 +62,18 @@ export const CancelledEmailNewsletterType = t.type({
 export const CurrentEmailNewsletterType = t.type({
 	...baseNewsletterModel,
 	cancelled: t.literal(false),
+	description: NonEmptyString,
 	frequency: NonEmptyString,
 	brazeSubscribeAttributeName: NonEmptyString,
 	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: NonEmptyString,
 	brazeNewsletterName: NonEmptyString,
-	emailEmbed: EmailEmbedType,
+	emailEmbed: EmailEmbedWithDescriptionType,
 });
 export const EmailNewsletterType = t.type({
 	...baseNewsletterModel,
 });
 
-export type EmailEmbed = t.TypeOf<typeof EmailEmbedType>;
 export type CurrentEmailNewsletter = t.TypeOf<
 	typeof CurrentEmailNewsletterType
 >;
