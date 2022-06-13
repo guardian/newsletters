@@ -5,8 +5,8 @@ import {
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
 import {
-	CurrentEmailNewsletter,
-	CurrentEmailNewsletterType,
+	EmailNewsletter,
+	EmailNewsletterType,
 	NewsletterIllustration,
 } from '../models/newsletters';
 import {
@@ -54,7 +54,7 @@ const rowToNewsletter = ({
 	25: mailHexCode,
 	26: mailImageUrl,
 	27: illustration,
-}: string[]): CurrentEmailNewsletter =>
+}: string[]): EmailNewsletter =>
 	({
 		identityName,
 		name,
@@ -98,13 +98,13 @@ const rowToNewsletter = ({
 			brazeSubscribeAttributeNameAlternate
 				?.split(',')
 				?.map((a) => a.trim()),
-	} as CurrentEmailNewsletter);
+	} as EmailNewsletter);
 
-const getEmailNewsletters = async (): Promise<CurrentEmailNewsletter[]> => {
+const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	const rows = await readNewslettersSheet();
 	const newsletters = prepareRows(rows)
 		.map(rowToNewsletter)
-		.filter(CurrentEmailNewsletterType.is);
+		.filter(EmailNewsletterType.is);
 
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
 	return newsletters;

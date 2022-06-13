@@ -3,8 +3,7 @@ import { NonEmptyString } from 'io-ts-types';
 import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
 	CancelledEmailNewsletterType,
-	CurrentEmailNewsletter,
-	CurrentEmailNewsletterType,
+	EmailNewsletter,
 	EmailNewsletterType,
 } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
@@ -15,7 +14,7 @@ const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
 const logFeedback = (
 	versionNumber: string,
-	newsletters: CurrentEmailNewsletter[],
+	newsletters: EmailNewsletter[],
 ): void => {
 	console.log({ versionNumber });
 	console.log('INDEX\tVALID\tCurrent\t CANCELLED\tNAME');
@@ -23,9 +22,10 @@ const logFeedback = (
 		console.log(
 			index,
 			'\t',
-			EmailNewsletterType.is(newsletter),
+			EmailNewsletterType.is(newsletter) ||
+				CancelledEmailNewsletterType.is(newsletter),
 			'\t',
-			CurrentEmailNewsletterType.is(newsletter),
+			EmailNewsletterType.is(newsletter),
 			'\t',
 			CancelledEmailNewsletterType.is(newsletter),
 			'\t\t',
@@ -35,7 +35,7 @@ const logFeedback = (
 };
 
 const getEmailNewslettersFromLocalCsv = async (): Promise<
-	CurrentEmailNewsletter[]
+	EmailNewsletter[]
 > => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
@@ -67,7 +67,7 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	});
 
 	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
-	return unvalidatedNewsletters.filter(CurrentEmailNewsletterType.is);
+	return unvalidatedNewsletters.filter(EmailNewsletterType.is);
 };
 
 const writePreviewJson = async (): Promise<void> => {

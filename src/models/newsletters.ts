@@ -59,7 +59,7 @@ export const CancelledEmailNewsletterType = t.type({
 	...baseNewsletterModel,
 	cancelled: t.literal(true),
 });
-export const CurrentEmailNewsletterType = t.type({
+export const EmailNewsletterType = t.type({
 	...baseNewsletterModel,
 	cancelled: t.literal(false),
 	description: NonEmptyString,
@@ -70,17 +70,12 @@ export const CurrentEmailNewsletterType = t.type({
 	brazeNewsletterName: NonEmptyString,
 	emailEmbed: EmailEmbedWithDescriptionType,
 });
-export const EmailNewsletterType = t.type({
-	...baseNewsletterModel,
-});
 
-export type CurrentEmailNewsletter = t.TypeOf<
-	typeof CurrentEmailNewsletterType
->;
+export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
 export type CancelledEmailNewsletter = t.TypeOf<
 	typeof CancelledEmailNewsletterType
 >;
-export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
+
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationType
 >;
