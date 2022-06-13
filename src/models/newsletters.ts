@@ -21,7 +21,7 @@ const EmailEmbedType = t.type({
 });
 
 // the value for EmailNewsletter.emailEmbed.description comes from the
-// "mailDescription" cell or if that if empty, the "description" cell.
+// "mailDescription" cell or if that is empty, the "description" cell.
 // As EmailNewsletter.description (from the "description" cell) is
 // NonEmptyString for a CurrentEmailNewsletter, so should
 // EmailNewsletter.emailEmbed.description.
