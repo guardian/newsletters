@@ -42,14 +42,14 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	).toString();
 	const cellsInRows = parseStringifiedCSV(csvData);
 	// rowToNewsletter casts its results as EmailNewsletter, but doesn't validate
-	// the values - this is done later by CurrentEmailNewsletter.is
+	// the values - this is done later by EmailNewsletter.is
 	const unvalidatedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
 
 	// The spreadsheet only fills the 'group' and 'theme' column when they change
 	// so the values need to be filled from the last non-empty value from a previous
 	// row.
 	// If the first row of data does not have these columns populated, the first
-	// group will have empty values, so will fail the CurrentEmailNewsletter.is test
+	// group will have empty values, so will fail the EmailNewsletter.is test
 	let lastGroup = '';
 	let lastTheme = '';
 
