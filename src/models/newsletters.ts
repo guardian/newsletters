@@ -20,11 +20,13 @@ const EmailEmbedType = t.type({
 	...baseEmailEmbedModel,
 });
 
-// the value for EmailNewsletter.emailEmbed.description comes from the
-// "mailDescription" cell or if that is empty, the "description" cell.
-// As EmailNewsletter.description (from the "description" cell) is
-// NonEmptyString for a CurrentEmailNewsletter, so should
-// EmailNewsletter.emailEmbed.description.
+// The parser sets the value of EmailEmbed.description using the
+// "mailDescription" column or the  "description"  column if
+// "mailDescription" is empty.
+// "Description" is optional on a CancelledEmailNewsletter, but
+// is required  as a NonEmptyString on an EmailNewsletter.
+// Consequently, EmailEmbed.description will always be a
+// NonEmptyString for a (non-cancelled) EmailNewsletter.
 const EmailEmbedWithDescriptionType = t.type({
 	...baseEmailEmbedModel,
 	description: NonEmptyString,
