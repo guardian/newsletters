@@ -3,7 +3,7 @@ import { replaceLastSpaceByNonBreakingSpace } from '../../util';
 import { getEmailNewsletters } from '../newsletters';
 
 const FREQUENCY_INDEX = 5;
-const CANCELLED_INDEX = 3;
+const CANCELLED_INDEX = 17;
 
 const EXPECTED_RESULTS = [
 	{
@@ -55,9 +55,8 @@ const VALID_NEWSLETTER_ENTRY = [
 	'FEATURES',
 	'The Upside',
 	'Features',
-	'FALSE',
 	'The Upside',
-	'Weekly',
+	'Weekly', // 5 Frequency
 	'Journalism that uncovers real solutions: people, movements and innovations offering answers to our most pressing problems. We’ll round up the best articles for you every week.',
 	'the-upside',
 	'-1',
@@ -70,6 +69,7 @@ const VALID_NEWSLETTER_ENTRY = [
 	'testCampaignCode',
 	'',
 	'TRUE',
+	'FALSE', // 17 Cancelled
 	'',
 	'/world/series/the-upside-weekly-report/latest/email',
 	'https://www.theguardian.com/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
