@@ -34,9 +34,11 @@ const logFeedback = (
 	});
 };
 
-const getEmailNewslettersFromLocalCsv = async (): Promise<
-	EmailNewsletter[]
-> => {
+const getEmailNewslettersFromLocalCsv = async (
+	config: {
+		includeCancelled?: boolean;
+	} = {},
+): Promise<EmailNewsletter[]> => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
@@ -67,7 +69,13 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	});
 
 	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
-	return unvalidatedNewsletters.filter(EmailNewsletterType.is);
+
+	const includeInData = config.includeCancelled
+		? (_: unknown): boolean =>
+				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_)
+		: EmailNewsletterType.is;
+
+	return unvalidatedNewsletters.filter(includeInData);
 };
 
 const writePreviewJson = async (): Promise<void> => {
@@ -78,7 +86,7 @@ const writePreviewJson = async (): Promise<void> => {
 	);
 	const data = USE_CODE_DATA
 		? await getEmailNewsletters()
-		: await getEmailNewslettersFromLocalCsv();
+		: await getEmailNewslettersFromLocalCsv({ includeCancelled: false });
 	const dataString = JSON.stringify(data);
 
 	await writeFileSync(PREVIEW_OUTPUT_FILE_PATH, dataString);
