@@ -38,7 +38,7 @@ Version in cell A1
 #### 0.7
 
 Column added:
-* D: cancelled
+* R: cancelled
 
 #### 0.3
 
