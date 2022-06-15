@@ -6,9 +6,9 @@ import {
 } from '../lib/googleNewsletterSheets';
 import {
 	CancelledEmailNewsletter,
-	CancelledEmailNewsletterType,
 	EmailNewsletter,
 	EmailNewsletterType,
+	isNewsletterOrCancelledNewsletter,
 	NewsletterIllustration,
 } from '../models/newsletters';
 import {
@@ -56,7 +56,7 @@ const rowToNewsletter = ({
 	25: mailHexCode,
 	26: mailImageUrl,
 	27: illustration,
-}: string[]): EmailNewsletter =>
+}: string[]): EmailNewsletter | CancelledEmailNewsletter =>
 	({
 		identityName,
 		name,
@@ -100,7 +100,7 @@ const rowToNewsletter = ({
 			brazeSubscribeAttributeNameAlternate
 				?.split(',')
 				?.map((a) => a.trim()),
-	} as EmailNewsletter);
+	} as EmailNewsletter | CancelledEmailNewsletter);
 
 const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	const rows = await readNewslettersSheet();
@@ -111,9 +111,6 @@ const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
 	return newsletters;
 };
-
-const isNewsletterOrCancelledNewsletter = (_: unknown): boolean =>
-	EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_);
 
 const getEmailNewslettersIncludingCancelled = async (): Promise<
 	(EmailNewsletter | CancelledEmailNewsletter)[]

@@ -81,3 +81,6 @@ export type CancelledEmailNewsletter = t.TypeOf<
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationType
 >;
+
+export const isNewsletterOrCancelledNewsletter = (_: unknown): boolean =>
+	EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_);
