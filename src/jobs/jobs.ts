@@ -6,26 +6,34 @@ import {
 	getEmailNewslettersIncludingCancelled,
 } from './newsletters';
 
-const buildNewsletters = async (
+const getAndUploadNewsletters = async (
 	includeCancelled = false,
-): Promise<ALBResult> => {
+): Promise<number> => {
+	const newsletters = includeCancelled
+		? await getEmailNewslettersIncludingCancelled()
+		: await getEmailNewsletters();
+
+	// TO DO - check if this is all that is required to upload two different documents to the bucket
+	const keySuffix = includeCancelled
+		? 'newsletters-including-cancelled'
+		: 'newsletters';
+
+	await s3upload({
+		Bucket: NEWSLETTERS_BUCKET_NAME,
+		Key: `${process.env.STAGE}/${keySuffix}`,
+		Body: JSON.stringify(newsletters),
+	});
+
+	return newsletters.length;
+};
+
+const buildNewsletters = async (): Promise<ALBResult> => {
 	try {
-		const newsletters = includeCancelled
-			? await getEmailNewslettersIncludingCancelled()
-			: await getEmailNewsletters();
+		const liveProcessed = await getAndUploadNewsletters();
+		const allProcessed = await getAndUploadNewsletters(true);
 
-		// TO DO - check if this is all that is required to upload a second document to the bucket
-		const keySuffix = includeCancelled
-			? 'newsletters-cancelled'
-			: 'newsletters';
-
-		await s3upload({
-			Bucket: NEWSLETTERS_BUCKET_NAME,
-			Key: `${process.env.STAGE}/${keySuffix}`,
-			Body: JSON.stringify(newsletters),
-		});
 		return {
-			body: `${newsletters.length} newsletters successfully processed`,
+			body: `${liveProcessed} newsletters successfully processed, including cancelled newsletters ${allProcessed} succesfully processed`,
 			statusCode: 200,
 		};
 	} catch (e) {
