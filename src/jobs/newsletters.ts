@@ -5,6 +5,8 @@ import {
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
 import {
+	CancelledEmailNewsletter,
+	CancelledEmailNewsletterType,
 	EmailNewsletter,
 	EmailNewsletterType,
 	NewsletterIllustration,
@@ -110,4 +112,23 @@ const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	return newsletters;
 };
 
-export { getEmailNewsletters, rowToNewsletter };
+const isNewsletterOrCancelledNewsletter = (_: unknown): boolean =>
+	EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_);
+
+const getEmailNewslettersIncludingCancelled = async (): Promise<
+	(EmailNewsletter | CancelledEmailNewsletter)[]
+> => {
+	const rows = await readNewslettersSheet();
+	const newsletters = prepareRows(rows)
+		.map(rowToNewsletter)
+		.filter(isNewsletterOrCancelledNewsletter);
+
+	assert.ok(!!newsletters.length, 'No newsletters processed!');
+	return newsletters;
+};
+
+export {
+	getEmailNewsletters,
+	rowToNewsletter,
+	getEmailNewslettersIncludingCancelled,
+};
