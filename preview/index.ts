@@ -1,22 +1,28 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { NonEmptyString } from 'io-ts-types';
-import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
+	getEmailNewsletters,
+	getEmailNewslettersIncludingCancelled,
+	rowToNewsletter,
+} from '../src/jobs/newsletters';
+import {
+	CancelledEmailNewsletter,
 	CancelledEmailNewsletterType,
 	EmailNewsletter,
 	EmailNewsletterType,
+	isNewsletterOrCancelledNewsletter,
 } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
 
 const USE_CODE_DATA = !!process.env.USE_CODE_DATA;
+const INCLUDE_CANCELLED = !!process.env.INCLUDE_CANCELLED;
 const PREVIEW_OUTPUT_FILE_PATH = './preview/preview.json';
 const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
-const logFeedback = (
-	versionNumber: string,
-	newsletters: EmailNewsletter[],
+const logListOfResults = (
+	newsletters: (EmailNewsletter | CancelledEmailNewsletter)[],
 ): void => {
-	console.log({ versionNumber });
+	console.log('\nCSV FILE CONTENTS:');
 	console.log('INDEX\tVALID\tCurrent\t CANCELLED\tNAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
@@ -32,13 +38,23 @@ const logFeedback = (
 			newsletter.name,
 		);
 	});
+	console.log('\n');
 };
 
-const getEmailNewslettersFromLocalCsv = async (
-	config: {
-		includeCancelled?: boolean;
-	} = {},
-): Promise<EmailNewsletter[]> => {
+const describeOutput = (
+	newsletters: (EmailNewsletter | CancelledEmailNewsletter)[],
+): void => {
+	const valids = newsletters.filter(isNewsletterOrCancelledNewsletter);
+	console.log('OUTPUT:', {
+		total: valids.length,
+		current: valids.filter((_) => _.cancelled === false).length,
+		cancelled: valids.filter((_) => _.cancelled === true).length,
+	});
+};
+
+const getEmailNewslettersFromLocalCsv = async (): Promise<
+	(EmailNewsletter | CancelledEmailNewsletter)[]
+> => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
@@ -68,11 +84,11 @@ const getEmailNewslettersFromLocalCsv = async (
 		}
 	});
 
-	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
+	console.log('SAMPLE CSV VERSION NUMBER CELL:', cellsInRows[0][0]);
+	logListOfResults(unvalidatedNewsletters);
 
-	const includeInData = config.includeCancelled
-		? (_: unknown): boolean =>
-				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_)
+	const includeInData = INCLUDE_CANCELLED
+		? isNewsletterOrCancelledNewsletter
 		: EmailNewsletterType.is;
 
 	return unvalidatedNewsletters.filter(includeInData);
@@ -85,11 +101,13 @@ const writePreviewJson = async (): Promise<void> => {
 		}`,
 	);
 	const data = USE_CODE_DATA
-		? await getEmailNewsletters()
-		: await getEmailNewslettersFromLocalCsv({ includeCancelled: false });
-	const dataString = JSON.stringify(data);
+		? INCLUDE_CANCELLED
+			? await getEmailNewslettersIncludingCancelled()
+			: await getEmailNewsletters()
+		: await getEmailNewslettersFromLocalCsv();
 
-	await writeFileSync(PREVIEW_OUTPUT_FILE_PATH, dataString);
+	describeOutput(data);
+	await writeFileSync(PREVIEW_OUTPUT_FILE_PATH, JSON.stringify(data));
 };
 
 writePreviewJson();

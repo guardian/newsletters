@@ -9,8 +9,10 @@ Cron job which create a newsletter file from the newsletter master sheet
 * `yarn install` to install the dependencies
 * `yarn dev` to run the job
 * `yarn test` to run the tests
-* `yarn preview` to generate a local JSON file in the `/preview` folder, using the `/preview/sampleData.csv`
-* `yarn preview-code-data` to generate a local JSON file in the `/preview` folder, using data from CODE
+* `yarn preview` to generate a local JSON file in the `/preview` folder, using the `/preview/sampleData.csv`, excluding cancelled newsletters
+* `INCLUDE_CANCELLED=true yarn preview` to generate a local JSON file in the `/preview` folder, using the `/preview/sampleData.csv`, including cancelled newsletters
+* `yarn preview-code-data` to generate a local JSON file in the `/preview` folder, using data from CODE, excluding cancelled newsletters
+* `INCLUDE_CANCELLED=true yarn preview-code-data` to generate a local JSON file in the `/preview` folder, using data from CODE, including cancelled newsletters
 
 Running the application locally uses the DEVELOPMENT stage.
 
