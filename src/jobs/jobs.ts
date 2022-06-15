@@ -11,7 +11,7 @@ const buildNewsletters = async (
 ): Promise<ALBResult> => {
 	try {
 		const newsletters = includeCancelled
-			? await getEmailNewslettersIncludingCancelled
+			? await getEmailNewslettersIncludingCancelled()
 			: await getEmailNewsletters();
 
 		// TO DO - check if this is all that is required to upload a second document to the bucket
