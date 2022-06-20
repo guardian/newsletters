@@ -73,7 +73,7 @@ const formatPreviewLinks = (
 const prepareRows = (rows: sheetsV4.Schema$RowData[]): string[][] => {
 	const dataStartRow = 1;
 
-	const format =
+	const replaceEmptyValue =
 		(index: number, current: (string | undefined)[]) =>
 		(value: string | undefined, i: number): string | undefined => {
 			if (i === index) {
@@ -93,8 +93,10 @@ const prepareRows = (rows: sheetsV4.Schema$RowData[]): string[][] => {
 			({ values }) =>
 				values
 					?.map(formatPreviewLinks)
-					.map(format(THEME_INDEX, currentTheme))
-					.map(format(GROUP_INDEX, currentGroup)) as string[],
+					.map(replaceEmptyValue(THEME_INDEX, currentTheme))
+					.map(
+						replaceEmptyValue(GROUP_INDEX, currentGroup),
+					) as string[],
 		);
 };
 

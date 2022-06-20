@@ -27,8 +27,9 @@ const isTrue = (str: string | undefined): boolean =>
 
 const rowToNewsletter = ({
 	[THEME_INDEX]: theme,
+	// column 2 ("name") is not used.
 	[GROUP_INDEX]: group,
-	3: name,
+	3: name, // column headding on the sheet is "Displayed Name"
 	4: frequency,
 	5: description,
 	6: identityName,
@@ -42,20 +43,22 @@ const rowToNewsletter = ({
 	14: campaignCode,
 	15: restricted,
 	16: paused,
-	17: emailConfirmation,
+	17: cancelled,
+	18: emailConfirmation,
 	[PREVIEW_INDEX]: exampleUrl,
-	19: signupPage,
-	20: mailName,
-	21: mailTitle,
-	22: mailDescription,
-	23: mailSuccessDescription,
-	24: mailHexCode,
-	25: mailImageUrl,
-	26: illustration,
+	20: signupPage,
+	21: mailName,
+	22: mailTitle,
+	23: mailDescription,
+	24: mailSuccessDescription,
+	25: mailHexCode,
+	26: mailImageUrl,
+	27: illustration,
 }: string[]): EmailNewsletter =>
 	({
 		identityName,
 		name,
+		cancelled: isTrue(cancelled),
 		restricted: isTrue(restricted),
 		paused: isTrue(paused),
 		emailConfirmation: isTrue(emailConfirmation),

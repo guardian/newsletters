@@ -2,10 +2,10 @@ import { sheets_v4 as sheetsV4 } from 'googleapis';
 import { prepareRows } from '../googleNewsletterSheets';
 
 describe('prepare rows', () => {
-	it('rows', () => {
-		const want = [
+	it('will replace values in the "preview" column with undefined if they are formatted red and replace empty values for the "theme" column with the last non-empty "theme" from a preview row', () => {
+		const expectedResults = [
 			[
-				'on row 1 and 2',
+				'theme for rows 1 and 2',
 				'2',
 				'3',
 				'4',
@@ -23,10 +23,11 @@ describe('prepare rows', () => {
 				'16',
 				'17',
 				'18',
+				'19',
 				undefined,
 			],
 			[
-				'on row 1 and 2',
+				'theme for rows 1 and 2',
 				'2',
 				'3',
 				'4',
@@ -44,10 +45,11 @@ describe('prepare rows', () => {
 				'16',
 				'17',
 				'18',
-				'not filtered',
+				'19',
+				'value for preview column, not formatted in red, should not be filtered out',
 			],
 			[
-				'on row 3 and 4',
+				'theme for rows 3 and 4',
 				'2',
 				'3',
 				'4',
@@ -66,7 +68,7 @@ describe('prepare rows', () => {
 				'17',
 			],
 			[
-				'on row 3 and 4',
+				'theme for rows 3 and 4',
 				'2',
 				'3',
 				'4',
@@ -89,7 +91,7 @@ describe('prepare rows', () => {
 			[],
 			{
 				values: [
-					{ formattedValue: 'on row 1 and 2' },
+					{ formattedValue: 'theme for rows 1 and 2' },
 					{ formattedValue: '2' },
 					{ formattedValue: '3' },
 					{ formattedValue: '4' },
@@ -107,8 +109,10 @@ describe('prepare rows', () => {
 					{ formattedValue: '16' },
 					{ formattedValue: '17' },
 					{ formattedValue: '18' },
+					{ formattedValue: '19' },
 					{
-						formattedValue: 'filtered',
+						formattedValue:
+							'value for preview column formatted red, which should be filtered out and replaced with undefined',
 						userEnteredFormat: {
 							textFormat: { foregroundColor: { red: 1 } },
 						},
@@ -135,8 +139,10 @@ describe('prepare rows', () => {
 					{ formattedValue: '16' },
 					{ formattedValue: '17' },
 					{ formattedValue: '18' },
+					{ formattedValue: '19' },
 					{
-						formattedValue: 'not filtered',
+						formattedValue:
+							'value for preview column, not formatted in red, should not be filtered out',
 						userEnteredFormat: {
 							textFormat: { foregroundColor: { blue: 1 } },
 						},
@@ -145,7 +151,7 @@ describe('prepare rows', () => {
 			} as sheetsV4.Schema$RowData,
 			{
 				values: [
-					{ formattedValue: 'on row 3 and 4' },
+					{ formattedValue: 'theme for rows 3 and 4' },
 					{ formattedValue: '2' },
 					{ formattedValue: '3' },
 					{ formattedValue: '4' },
@@ -187,6 +193,6 @@ describe('prepare rows', () => {
 			} as sheetsV4.Schema$RowData,
 		] as sheetsV4.Schema$RowData[];
 		const got = prepareRows(rows);
-		expect(got).toEqual(want);
+		expect(got).toEqual(expectedResults);
 	});
 });
