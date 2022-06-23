@@ -27,8 +27,7 @@ const logListOfResults = (
 		console.log(
 			index,
 			'\t',
-			EmailNewsletterType.is(newsletter) ||
-				CancelledEmailNewsletterType.is(newsletter),
+			isNewsletterOrCancelledNewsletter(newsletter),
 			'\t',
 			EmailNewsletterType.is(newsletter),
 			'\t',
@@ -43,19 +42,22 @@ const logListOfResults = (
 const describeOutput = (
 	newsletters: (EmailNewsletter | CancelledEmailNewsletter)[],
 ): void => {
-	const valids = newsletters.filter(isNewsletterOrCancelledNewsletter);
-	console.log('OUTPUT:', {
-		total: valids.length,
-		current: valids.filter((_) => _.cancelled === false).length,
-		cancelled: valids.filter((_) => _.cancelled === true).length,
-	});
+	console.log(
+		`OUTPUT${
+			INCLUDE_CANCELLED ? '(all included)' : '(cancelled excluded)'
+		} to ${PREVIEW_OUTPUT_FILE_PATH}:`,
+		{
+			total: newsletters.length,
+			current: newsletters.filter(EmailNewsletterType.is).length,
+			cancelled: newsletters.filter(CancelledEmailNewsletterType.is)
+				.length,
+		},
+	);
 };
 
-const getEmailNewslettersFromLocalCsv = async (
-	config: {
-		includeCancelled?: boolean;
-	} = {},
-): Promise<(EmailNewsletter | CancelledEmailNewsletter)[]> => {
+const getEmailNewslettersFromLocalCsv = async (): Promise<
+	(EmailNewsletter | CancelledEmailNewsletter)[]
+> => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
@@ -85,12 +87,11 @@ const getEmailNewslettersFromLocalCsv = async (
 		}
 	});
 
-	console.log('SAMPLE CSV VERSION NUMBER CELL:', cellsInRows[0][0]);
+	console.log('\nSAMPLE CSV VERSION NUMBER CELL:', cellsInRows[0][0]);
 	logListOfResults(unvalidatedNewsletters);
 
 	const includeInData = INCLUDE_CANCELLED
-		? (_: unknown): boolean =>
-				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_)
+		? isNewsletterOrCancelledNewsletter
 		: EmailNewsletterType.is;
 
 	return unvalidatedNewsletters.filter(includeInData);
@@ -98,7 +99,7 @@ const getEmailNewslettersFromLocalCsv = async (
 
 const writePreviewJson = async (): Promise<void> => {
 	console.log(
-		`\nGenerating preview at ${PREVIEW_OUTPUT_FILE_PATH}, using ${
+		`\nGenerating preview using ${
 			USE_CODE_DATA ? 'data from CODE' : PREVIEW_DATA_SOURCE_FILE_PATH
 		}`,
 	);
