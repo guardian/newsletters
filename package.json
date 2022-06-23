@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/cron.ts",
+    "dev": "STAGE=DEVELOPMENT AWS_PROFILE=frontend AWS_REGION=eu-west-1 ts-node-dev --transpile-only src/cron.ts",
     "preview": "ts-node-dev --transpile-only preview/index.ts",
     "preview-code-data": "USE_CODE_DATA=TRUE STAGE=CODE ts-node-dev --transpile-only preview/index.ts",
     "build": "tsc",
