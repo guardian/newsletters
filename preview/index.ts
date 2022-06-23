@@ -22,7 +22,6 @@ const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 const logListOfResults = (
 	newsletters: (EmailNewsletter | CancelledEmailNewsletter)[],
 ): void => {
-	console.log('\nCSV FILE CONTENTS:');
 	console.log('INDEX\tVALID\tCurrent\t CANCELLED\tNAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
@@ -52,9 +51,11 @@ const describeOutput = (
 	});
 };
 
-const getEmailNewslettersFromLocalCsv = async (): Promise<
-	(EmailNewsletter | CancelledEmailNewsletter)[]
-> => {
+const getEmailNewslettersFromLocalCsv = async (
+	config: {
+		includeCancelled?: boolean;
+	} = {},
+): Promise<(EmailNewsletter | CancelledEmailNewsletter)[]> => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
@@ -88,7 +89,8 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	logListOfResults(unvalidatedNewsletters);
 
 	const includeInData = INCLUDE_CANCELLED
-		? isNewsletterOrCancelledNewsletter
+		? (_: unknown): boolean =>
+				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_)
 		: EmailNewsletterType.is;
 
 	return unvalidatedNewsletters.filter(includeInData);

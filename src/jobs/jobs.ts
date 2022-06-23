@@ -29,11 +29,13 @@ const getAndUploadNewsletters = async (
 
 const buildNewsletters = async (): Promise<ALBResult> => {
 	try {
-		const liveProcessed = await getAndUploadNewsletters();
-		const allProcessed = await getAndUploadNewsletters(true);
+		const currentProcessed = await getAndUploadNewsletters();
+		const currentAndCancelledProcessed = await getAndUploadNewsletters(
+			true,
+		);
 
 		return {
-			body: `${liveProcessed} newsletters successfully processed, including cancelled newsletters ${allProcessed} succesfully processed`,
+			body: `${currentProcessed} newsletters successfully processed, including cancelled newsletters ${currentAndCancelledProcessed} succesfully processed`,
 			statusCode: 200,
 		};
 	} catch (e) {
