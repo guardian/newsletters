@@ -4,7 +4,7 @@ import { GuScheduledLambda } from '@guardian/cdk/lib/patterns/scheduled-lambda';
 import type { App } from 'aws-cdk-lib';
 import { Duration } from 'aws-cdk-lib';
 import { Schedule } from 'aws-cdk-lib/aws-events';
-import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NEWSLETTERS_BUCKET_NAME } from '../../src/constants';
 
@@ -17,6 +17,7 @@ export class NewslettersSource extends GuStack {
 		const app = 'newsletters-source';
 
 		const s3PutPolicy = new PolicyStatement({
+			effect: Effect.ALLOW,
 			actions: ['s3:PutObject'],
 			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}/*`],
 		});
