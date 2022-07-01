@@ -29,7 +29,7 @@ Object {
             "STAGE": "TEST",
           },
         },
-        "FunctionName": "newsletters-source-TEST",
+        "FunctionName": "newsletters-newsletters-source-TEST",
         "Handler": "cron.handler",
         "MemorySize": 384,
         "Role": Object {
