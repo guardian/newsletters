@@ -18,19 +18,19 @@ export class NewslettersSource extends GuStack {
 
 		const s3PutPolicy = new PolicyStatement({
 			actions: ['s3:PutObject'],
-			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}/*`],
+			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}/${stage}/*`],
 		});
 
 		new GuScheduledLambda(this, `${app}-lambda`, {
 			app,
 			runtime: Runtime.NODEJS_14_X,
 			functionName: `${stack}-${app}-${stage}`,
-			memorySize: 384,
+			memorySize: 512,
 			handler: 'cron.handler',
 			fileName: `${app}.zip`,
 			monitoringConfiguration: { noMonitoring: true },
 			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],
-			timeout: Duration.seconds(30),
+			timeout: Duration.seconds(60),
 			environment: {
 				STAGE: stage,
 			},
