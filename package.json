@@ -13,7 +13,7 @@
     "build": "tsc",
     "lint": "eslint src preview --ext .js,.jsx,.ts,.tsx",
     "tsc": "tsc",
-    "prebuild": "rm -rf dist cloudformation.yaml",
+    "prebuild": "rm -rf dist",
     "postbuild": "./bin/package.sh",
     "prettier": "prettier --check src preview",
     "prettier:fix": "prettier --write src preview",
