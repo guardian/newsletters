@@ -125,7 +125,7 @@ Object {
             Object {
               "Action": "s3:PutObject",
               "Effect": "Allow",
-              "Resource": "arn:aws:s3:::aws-frontend-newsletters-source",
+              "Resource": "arn:aws:s3:::aws-frontend-newsletters-source/*",
             },
             Object {
               "Action": Array [
