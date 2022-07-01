@@ -18,7 +18,7 @@ export class NewslettersSource extends GuStack {
 
 		const s3PutPolicy = new PolicyStatement({
 			effect: Effect.ALLOW,
-			actions: ['s3:PutObject'],
+			actions: ['s3:PutObject', 's3:PutObjectAcl'],
 			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}/*`],
 		});
 
