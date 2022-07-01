@@ -1,9 +1,40 @@
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack } from '@guardian/cdk/lib/constructs/core';
+import { GuScheduledLambda } from '@guardian/cdk/lib/patterns/scheduled-lambda';
 import type { App } from 'aws-cdk-lib';
+import { Duration } from 'aws-cdk-lib';
+import { Schedule } from 'aws-cdk-lib/aws-events';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NEWSLETTERS_BUCKET_NAME } from '../../src/constants';
 
 export class NewslettersSource extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
 		super(scope, id, props);
+
+		const { stage } = props;
+
+		const app = 'newsletters-source';
+
+		const s3PutPolicy = new PolicyStatement({
+			actions: ['s3:PutObject'],
+			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}`],
+		});
+
+		new GuScheduledLambda(this, `${app}-lambda`, {
+			app,
+			runtime: Runtime.NODEJS_14_X,
+			functionName: `${app}-${stage}`,
+			memorySize: 384,
+			handler: 'cron.handler',
+			fileName: `${app}.zip`,
+			monitoringConfiguration: { noMonitoring: true },
+			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],
+			timeout: Duration.seconds(30),
+			environment: {
+				STAGE: stage,
+			},
+			initialPolicy: [s3PutPolicy],
+		});
 	}
 }
