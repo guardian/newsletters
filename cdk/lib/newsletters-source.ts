@@ -4,7 +4,7 @@ import { GuScheduledLambda } from '@guardian/cdk/lib/patterns/scheduled-lambda';
 import type { App } from 'aws-cdk-lib';
 import { Duration } from 'aws-cdk-lib';
 import { Schedule } from 'aws-cdk-lib/aws-events';
-import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NEWSLETTERS_BUCKET_NAME } from '../../src/constants';
 
