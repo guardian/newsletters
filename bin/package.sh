@@ -10,8 +10,8 @@ cd ..
 
 (
 	cd cdk
-	npm ci
-	npm run lint
-	npm test
-	npm run synth
+	yarn install
+	yarn lint
+	yarn test
+	yarn synth
 )
