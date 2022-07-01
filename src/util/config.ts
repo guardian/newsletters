@@ -6,7 +6,7 @@ import {
 } from 'aws-sdk/lib/core';
 
 const Stage = process.env.STAGE ?? 'CODE';
-const Path = `/frontend/${Stage}/newsletters-source/`;
+const Path = `/${Stage}/newsletters/newsletters-source/`;
 type Config = { [key: string]: string };
 
 const ssm: SSM = new SSM({
