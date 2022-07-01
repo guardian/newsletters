@@ -18,7 +18,7 @@
     "prettier": "prettier --check src preview",
     "prettier:fix": "prettier --write src preview",
     "prepare": "husky install",
-    "test": "jest",
+    "test": "jest src preview",
     "upload-artifact": "node-riffraff-artifact"
   },
   "dependencies": {
