@@ -18,7 +18,7 @@ export class NewslettersSource extends GuStack {
 
 		const s3PutPolicy = new PolicyStatement({
 			actions: ['s3:PutObject'],
-			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}/${stage}/*`],
+			resources: [`arn:aws:s3:::${NEWSLETTERS_BUCKET_NAME}/*`],
 		});
 
 		new GuScheduledLambda(this, `${app}-lambda`, {
