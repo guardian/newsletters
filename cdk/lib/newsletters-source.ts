@@ -12,7 +12,7 @@ export class NewslettersSource extends GuStack {
 	constructor(scope: App, id: string, props: GuStackProps) {
 		super(scope, id, props);
 
-		const { stage } = props;
+		const { stage, stack } = props;
 
 		const app = 'newsletters-source';
 
@@ -24,7 +24,7 @@ export class NewslettersSource extends GuStack {
 		new GuScheduledLambda(this, `${app}-lambda`, {
 			app,
 			runtime: Runtime.NODEJS_14_X,
-			functionName: `${app}-${stage}`,
+			functionName: `${stack}-${app}-${stage}`,
 			memorySize: 384,
 			handler: 'cron.handler',
 			fileName: `${app}.zip`,
