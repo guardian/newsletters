@@ -9,7 +9,12 @@
     },
     {
       "action": "cloudformation",
-      "path": "cloudformation.yaml",
+      "path": "cdk/cdk.out/newsletters-source-CODE.template.json",
+      "compress": false
+    },
+    {
+      "action": "cloudformation",
+      "path": "cdk/cdk.out/newsletters-source-PROD.template.json",
       "compress": false
     }
   ]
