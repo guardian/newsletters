@@ -31,7 +31,7 @@ Object {
         },
         "FunctionName": "newsletters-newsletters-source-TEST",
         "Handler": "cron.handler",
-        "MemorySize": 384,
+        "MemorySize": 512,
         "Role": Object {
           "Fn::GetAtt": Array [
             "newsletterssourcelambdaServiceRole6F6F519E",
@@ -61,7 +61,7 @@ Object {
             "Value": "TEST",
           },
         ],
-        "Timeout": 30,
+        "Timeout": 60,
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -125,7 +125,7 @@ Object {
             Object {
               "Action": "s3:PutObject",
               "Effect": "Allow",
-              "Resource": "arn:aws:s3:::aws-frontend-newsletters-source/*",
+              "Resource": "arn:aws:s3:::aws-frontend-newsletters-source/TEST/*",
             },
             Object {
               "Action": Array [
