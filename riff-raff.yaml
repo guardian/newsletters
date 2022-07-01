@@ -1,4 +1,4 @@
-stacks: [frontend]
+stacks: [newsletters]
 regions: [eu-west-1]
 allowedStages: [CODE, PROD]
 
