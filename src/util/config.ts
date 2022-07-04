@@ -6,7 +6,7 @@ import {
 } from 'aws-sdk/lib/core';
 
 const Stage = process.env.STAGE ?? 'CODE';
-const Path = `/frontend/${Stage}/newsletters-source/`;
+const Path = `/${Stage}/newsletters/newsletters-source`;
 type Config = { [key: string]: string };
 
 const ssm: SSM = new SSM({
@@ -32,7 +32,7 @@ async function fetchConfig(): Promise<Config> {
 			.promise();
 		for (const parameter of awsParameters.Parameters ?? []) {
 			if (parameter.Name && parameter.Value) {
-				const name = parameter.Name.replace(Path, '');
+				const name = parameter.Name.replace(`${Path}/`, '');
 				state[name] = parameter.Value;
 			}
 		}

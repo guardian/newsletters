@@ -1,4 +1,4 @@
-stacks: [frontend]
+stacks: [newsletters]
 regions: [eu-west-1]
 allowedStages: [CODE, PROD]
 
@@ -8,12 +8,14 @@ deployments:
     app: newsletters-source
     parameters:
       cloudFormationStackName: newsletters-source
-      templatePath: cloudformation.yaml
       cloudFormationStackByTags: false
+      templateStagePaths:
+        CODE: newsletters-source-CODE.template.json
+        PROD: newsletters-source-PROD.template.json
   newsletters-source:
     type: aws-lambda
     dependencies: [cloudformation]
     parameters:
-      bucket: aws-frontend-artifacts
+      bucket: com-gu-frontend-artifacts
       fileName: newsletters-source.zip
       functionNames: [-newsletters-source-]
