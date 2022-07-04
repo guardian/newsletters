@@ -14,14 +14,14 @@ Cron job which create a newsletter file from the newsletter master sheet
 
 Running the application locally uses the DEVELOPMENT stage.
 
-### Configuration
+## Configuration
 
-Stored is AWS Systems Manager > Parameter Store, under path: /${STAGE}/newsletters/newsletters-source/${key}
+Stored is AWS Systems Manager > Parameter Store, under path: `/${STAGE}/newsletters/newsletters-source/${key}`
 
 * `spreadsheet.id`
 * `google.key`
 
-### Deployment
+## Deployment
 
 The service is an AWS scheduled lambda, run every 5 minutes.
 The newsletters file is generated on s3 and cached by fastly on CODE and PROD.
@@ -30,6 +30,20 @@ The urls are:
 * [CODE](https://newsletters.code.dev-guardianapis.com/newsletters)
 * [PROD](https://newsletters.guardianapis.com/newsletters)
 * [DEVELOPMENT](https://aws-frontend-newsletters-source.s3.eu-west-1.amazonaws.com/DEVELOPMENT/newsletters)
+
+## Architecture
+
+```mermaid
+graph TD
+    C((Cron))-- every 5 minutes --->S
+    S[This service]-- saves JSON file to --->S3[(S3 Bucket)]
+
+    S-- reads data from ---GSheet[(Google Sheets API)]
+
+
+    req(requests to newsletters.guardianapis.com)--->Fastly
+    Fastly-- reads JSON file from ---S3
+```
 
 ### sheet changelog
 
