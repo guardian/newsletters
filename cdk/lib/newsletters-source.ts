@@ -29,7 +29,11 @@ export class NewslettersSource extends GuStack {
 			memorySize: 512,
 			handler: 'cron.handler',
 			fileName: `${app}.zip`,
-			monitoringConfiguration: { noMonitoring: true },
+			monitoringConfiguration: {
+				toleratedErrorPercentage: 100,
+				numberOfMinutesAboveThresholdBeforeAlarm: 10,
+				snsTopicName: `newsletters-alerts`,
+			},
 			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],
 			timeout: Duration.seconds(60),
 			environment: {
