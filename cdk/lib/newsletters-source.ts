@@ -31,6 +31,7 @@ export class NewslettersSource extends GuStack {
 			fileName: `${app}.zip`,
 			monitoringConfiguration: {
 				toleratedErrorPercentage: 99,
+				datapointsToAlarm: 2,
 				numberOfMinutesAboveThresholdBeforeAlarm: 10,
 				snsTopicName: `newsletters-alerts`,
 			},

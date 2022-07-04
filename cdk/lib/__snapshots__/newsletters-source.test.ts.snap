@@ -110,6 +110,7 @@ Object {
           ],
         },
         "ComparisonOperator": "GreaterThanThreshold",
+        "DatapointsToAlarm": 2,
         "EvaluationPeriods": 10,
         "Metrics": Array [
           Object {
