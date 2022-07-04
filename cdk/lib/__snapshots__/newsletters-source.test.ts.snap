@@ -93,7 +93,7 @@ Object {
               Object {
                 "Ref": "newsletterssourcelambdaDC8710B7",
               },
-              " exceeded 100% error rate",
+              " exceeded 99% error rate",
             ],
           ],
         },
@@ -168,7 +168,7 @@ Object {
             "ReturnData": false,
           },
         ],
-        "Threshold": 100,
+        "Threshold": 99,
         "TreatMissingData": "notBreaching",
       },
       "Type": "AWS::CloudWatch::Alarm",

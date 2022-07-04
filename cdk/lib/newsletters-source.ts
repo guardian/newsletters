@@ -30,7 +30,7 @@ export class NewslettersSource extends GuStack {
 			handler: 'cron.handler',
 			fileName: `${app}.zip`,
 			monitoringConfiguration: {
-				toleratedErrorPercentage: 100,
+				toleratedErrorPercentage: 99,
 				numberOfMinutesAboveThresholdBeforeAlarm: 10,
 				snsTopicName: `newsletters-alerts`,
 			},
