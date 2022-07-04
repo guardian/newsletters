@@ -16,7 +16,7 @@ Running the application locally uses the DEVELOPMENT stage.
 
 ### Configuration
 
-Stored is AWS Systems Manager > Parameter Store, under path: /${STAGE}/newsletters/newsletters-source/${key}
+Stored is AWS Systems Manager > Parameter Store, under path: `/${STAGE}/newsletters/newsletters-source/${key}`
 
 * `spreadsheet.id`
 * `google.key`
