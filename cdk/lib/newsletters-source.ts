@@ -29,7 +29,15 @@ export class NewslettersSource extends GuStack {
 			memorySize: 512,
 			handler: 'cron.handler',
 			fileName: `${app}.zip`,
-			monitoringConfiguration: { noMonitoring: true },
+			monitoringConfiguration: {
+				/*
+				The alarm will trigger if: >= 2 runs fail within 7 minutes
+				*/
+				toleratedErrorPercentage: 99,
+				numberOfMinutesAboveThresholdBeforeAlarm: 7,
+				datapointsToAlarm: 2,
+				snsTopicName: `newsletters-alerts`,
+			},
 			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],
 			timeout: Duration.seconds(60),
 			environment: {

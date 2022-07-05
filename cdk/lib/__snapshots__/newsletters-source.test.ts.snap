@@ -65,6 +65,115 @@ Object {
       },
       "Type": "AWS::Lambda::Function",
     },
+    "newsletterssourcelambdaErrorPercentageAlarmForLambda11C2FE6A": Object {
+      "Properties": Object {
+        "ActionsEnabled": true,
+        "AlarmActions": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:aws:sns:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":",
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                ":newsletters-alerts",
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              Object {
+                "Ref": "newsletterssourcelambdaDC8710B7",
+              },
+              " exceeded 99% error rate",
+            ],
+          ],
+        },
+        "AlarmName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "High error % from ",
+              Object {
+                "Ref": "newsletterssourcelambdaDC8710B7",
+              },
+              " lambda in TEST",
+            ],
+          ],
+        },
+        "ComparisonOperator": "GreaterThanThreshold",
+        "DatapointsToAlarm": 2,
+        "EvaluationPeriods": 7,
+        "Metrics": Array [
+          Object {
+            "Expression": "100*m1/m2",
+            "Id": "expr_1",
+            "Label": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "Error % of ",
+                  Object {
+                    "Ref": "newsletterssourcelambdaDC8710B7",
+                  },
+                ],
+              ],
+            },
+          },
+          Object {
+            "Id": "m1",
+            "MetricStat": Object {
+              "Metric": Object {
+                "Dimensions": Array [
+                  Object {
+                    "Name": "FunctionName",
+                    "Value": Object {
+                      "Ref": "newsletterssourcelambdaDC8710B7",
+                    },
+                  },
+                ],
+                "MetricName": "Errors",
+                "Namespace": "AWS/Lambda",
+              },
+              "Period": 60,
+              "Stat": "Sum",
+            },
+            "ReturnData": false,
+          },
+          Object {
+            "Id": "m2",
+            "MetricStat": Object {
+              "Metric": Object {
+                "Dimensions": Array [
+                  Object {
+                    "Name": "FunctionName",
+                    "Value": Object {
+                      "Ref": "newsletterssourcelambdaDC8710B7",
+                    },
+                  },
+                ],
+                "MetricName": "Invocations",
+                "Namespace": "AWS/Lambda",
+              },
+              "Period": 60,
+              "Stat": "Sum",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Threshold": 99,
+        "TreatMissingData": "notBreaching",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
     "newsletterssourcelambdaServiceRole6F6F519E": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {

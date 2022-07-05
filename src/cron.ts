@@ -1,19 +1,13 @@
-import { ALBResult, ScheduledEvent } from 'aws-lambda';
 import { buildNewsletters } from './jobs/jobs';
 
-const handler = async (event?: ScheduledEvent): Promise<ALBResult> => {
-	console.log(`Event ${JSON.stringify(event)}`);
-	const result = await buildNewsletters();
-	console.log(`Job result ${JSON.stringify(result)}`);
-	return result;
-};
-
-const runLocal = async (): Promise<void> => {
-	await handler();
+const handler = async (): Promise<void> => {
+	console.log(`Running job`);
+	await buildNewsletters();
+	console.log(`Job completed`);
 };
 
 if (process.env.STAGE === 'DEVELOPMENT') {
-	runLocal();
+	handler();
 }
 
 exports.handler = handler;
