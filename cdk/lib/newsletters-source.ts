@@ -31,9 +31,7 @@ export class NewslettersSource extends GuStack {
 			fileName: `${app}.zip`,
 			monitoringConfiguration: {
 				/*
-				The alarm will trigger if:
-					* > 99% of requests are failing
-					* the error condition still exists after 10 minutes
+				The alarm will trigger if: >= 2 runs fail within 7 minutes
 				*/
 				toleratedErrorPercentage: 99,
 				numberOfMinutesAboveThresholdBeforeAlarm: 7,
