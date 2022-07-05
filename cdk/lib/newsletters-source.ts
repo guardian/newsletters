@@ -36,7 +36,8 @@ export class NewslettersSource extends GuStack {
 					* the error condition still exists after 10 minutes
 				*/
 				toleratedErrorPercentage: 99,
-				numberOfMinutesAboveThresholdBeforeAlarm: 10,
+				numberOfMinutesAboveThresholdBeforeAlarm: 7,
+				datapointsToAlarm: 2,
 				snsTopicName: `newsletters-alerts`,
 			},
 			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],

@@ -110,7 +110,8 @@ Object {
           ],
         },
         "ComparisonOperator": "GreaterThanThreshold",
-        "EvaluationPeriods": 10,
+        "DatapointsToAlarm": 2,
+        "EvaluationPeriods": 7,
         "Metrics": Array [
           Object {
             "Expression": "100*m1/m2",
