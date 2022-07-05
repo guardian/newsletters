@@ -30,8 +30,13 @@ export class NewslettersSource extends GuStack {
 			handler: 'cron.handler',
 			fileName: `${app}.zip`,
 			monitoringConfiguration: {
+				/*
+				The alarm will trigger if:
+					* > 99% of requests are failing
+					* there are at least 3 failing runs (datapointsToAlarm)
+				*/
 				toleratedErrorPercentage: 99,
-				datapointsToAlarm: 4,
+				datapointsToAlarm: 3,
 				snsTopicName: `newsletters-alerts`,
 			},
 			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],
