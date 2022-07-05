@@ -33,10 +33,12 @@ export class NewslettersSource extends GuStack {
 				/*
 				The alarm will trigger if:
 					* > 99% of requests are failing
-					* there are at least 3 failing runs (datapointsToAlarm)
+					* there are at least 2 failing runs (datapointsToAlarm)
+					* the error condition still exists after 15 minutes
 				*/
 				toleratedErrorPercentage: 99,
-				datapointsToAlarm: 3,
+				datapointsToAlarm: 2,
+				numberOfMinutesAboveThresholdBeforeAlarm: 15,
 				snsTopicName: `newsletters-alerts`,
 			},
 			rules: [{ schedule: Schedule.rate(Duration.minutes(5)) }],
