@@ -5,6 +5,7 @@ import {
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
 import {
+	CancelledEmailNewsletterType,
 	EmailNewsletter,
 	EmailNewsletterType,
 	NewsletterIllustration,
@@ -104,7 +105,10 @@ const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
 	const rows = await readNewslettersSheet();
 	const newsletters = prepareRows(rows)
 		.map(rowToNewsletter)
-		.filter(EmailNewsletterType.is);
+		.filter(
+			(_) =>
+				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_),
+		);
 
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
 	return newsletters;
