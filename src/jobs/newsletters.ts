@@ -1,10 +1,12 @@
 import { strict as assert } from 'assert';
+import { isRight } from 'fp-ts/lib/Either';
 import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
 import {
 	prepareRows,
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
 import {
+	CancelledEmailNewsletter,
 	CancelledEmailNewsletterType,
 	EmailNewsletter,
 	EmailNewsletterType,
@@ -101,17 +103,42 @@ const rowToNewsletter = ({
 				?.map((a) => a.trim()),
 	} as EmailNewsletter);
 
-const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
+function setDefaultValues(
+	newsletter: CancelledEmailNewsletter,
+): CancelledEmailNewsletter {
+	return {
+		...newsletter,
+		description: 'cancelled',
+		frequency: newsletter.frequency ?? 'cancelled',
+		brazeSubscribeAttributeName:
+			newsletter.brazeSubscribeAttributeName ?? 'cancelled',
+		brazeNewsletterName: newsletter.brazeNewsletterName ?? 'cancelled',
+		brazeSubscribeEventNamePrefix:
+			newsletter.brazeSubscribeEventNamePrefix ?? 'cancelled',
+	};
+}
+
+type AllNewsletters = EmailNewsletter | CancelledEmailNewsletter;
+
+const getEmailNewsletters = async (): Promise<AllNewsletters[]> => {
 	const rows = await readNewslettersSheet();
-	const newsletters = prepareRows(rows)
-		.map(rowToNewsletter)
-		.filter(
-			(_) =>
-				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_),
-		);
+	const newsletterObjects = prepareRows(rows).map((row) =>
+		rowToNewsletter(row),
+	);
+
+	const newsletters = newsletterObjects
+		.map(EmailNewsletterType.decode)
+		.filter(isRight)
+		.map((_) => _.right);
+
+	const cancelledNewsletters = newsletterObjects
+		.map(CancelledEmailNewsletterType.decode)
+		.filter(isRight)
+		.map((_) => _.right)
+		.map(setDefaultValues);
 
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
-	return newsletters;
+	return [...newsletters, ...cancelledNewsletters];
 };
 
 export { getEmailNewsletters, rowToNewsletter };
