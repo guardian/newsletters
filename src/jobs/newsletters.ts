@@ -103,6 +103,12 @@ const rowToNewsletter = ({
 				?.map((a) => a.trim()),
 	} as EmailNewsletter);
 
+/**
+ * Identity API requires some values on the newsletter object to be present.
+ * Those values are not required in the spreadsheet for cancelled newsletters, so we apply default values here.
+ * @param newsletter the newsletter to apply default values to
+ * @returns a copy of `newsletter`
+ */
 function setDefaultValues(
 	newsletter: CancelledEmailNewsletter,
 ): CancelledEmailNewsletter {
