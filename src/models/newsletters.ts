@@ -57,7 +57,8 @@ const baseNewsletterModel = {
 	campaignCode: optional(t.string),
 };
 
-export const BaseEmailNewsletter = t.type({ ...baseNewsletterModel });
+export const BaseEmailNewsletterType = t.type({ ...baseNewsletterModel });
+export type BaseEmailNewsletter = t.TypeOf<typeof BaseEmailNewsletterType>;
 
 export const CancelledEmailNewsletterType = t.type({
 	...baseNewsletterModel,

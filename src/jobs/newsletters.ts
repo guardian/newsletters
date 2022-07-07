@@ -7,6 +7,7 @@ import {
 } from '../lib/googleNewsletterSheets';
 import {
 	BaseEmailNewsletter,
+	BaseEmailNewsletterType,
 	CancelledEmailNewsletter,
 	CancelledEmailNewsletterType,
 	EmailNewsletter,
@@ -58,48 +59,58 @@ const rowToNewsletter = ({
 	25: mailHexCode,
 	26: mailImageUrl,
 	27: illustration,
-}: string[]): BaseEmailNewsletter => ({
-	identityName,
-	name,
-	cancelled: isTrue(cancelled),
-	restricted: isTrue(restricted),
-	paused: isTrue(paused),
-	emailConfirmation: isTrue(emailConfirmation),
-	brazeNewsletterName,
-	brazeSubscribeAttributeName:
-		brazeSubscribeAttributeName ||
-		getBrazeAttributeName(brazeSubscribeEventNamePrefix),
-	brazeSubscribeEventNamePrefix,
-	theme: theme?.toLowerCase(),
-	group,
-	description: description,
-	frequency,
-	listIdV1: parseInt(listIdV1),
-	listId: parseInt(listId),
-	exampleUrl,
-	signupPage: removeSitePrefix(signupPage),
-	emailEmbed: {
-		name: mailName || name,
-		title: replaceLastSpaceByNonBreakingSpace(
-			mailTitle || `Sign up for ${mailName || name}`,
-		),
-		description: mailDescription ? mailDescription : description,
-		successHeadline: isTrue(emailConfirmation)
-			? 'Check your email inbox and confirm your subscription'
-			: 'Subscription confirmed',
-		successDescription: mailSuccessDescription || 'Thanks for subscribing!',
-		hexCode: mailHexCode || '#DCDCDC',
-		imageUrl: mailImageUrl?.length > 0 ? mailImageUrl : undefined,
-	},
-	illustration: getIllustration(illustration),
-	campaignName: campaignName?.includes('not in ophan')
-		? undefined
-		: campaignName,
-	campaignCode,
-	brazeSubscribeAttributeNameAlternate: brazeSubscribeAttributeNameAlternate
-		?.split(',')
-		?.map((a) => a.trim()),
-});
+}: string[]): void | BaseEmailNewsletter => {
+	const newsletter = {
+		identityName,
+		name,
+		cancelled: isTrue(cancelled),
+		restricted: isTrue(restricted),
+		paused: isTrue(paused),
+		emailConfirmation: isTrue(emailConfirmation),
+		brazeNewsletterName,
+		brazeSubscribeAttributeName:
+			brazeSubscribeAttributeName ||
+			getBrazeAttributeName(brazeSubscribeEventNamePrefix),
+		brazeSubscribeEventNamePrefix,
+		theme: theme?.toLowerCase(),
+		group,
+		description: description,
+		frequency,
+		listIdV1: parseInt(listIdV1),
+		listId: parseInt(listId),
+		exampleUrl,
+		signupPage: removeSitePrefix(signupPage),
+		emailEmbed: {
+			name: mailName || name,
+			title: replaceLastSpaceByNonBreakingSpace(
+				mailTitle || `Sign up for ${mailName || name}`,
+			),
+			description: mailDescription ? mailDescription : description,
+			successHeadline: isTrue(emailConfirmation)
+				? 'Check your email inbox and confirm your subscription'
+				: 'Subscription confirmed',
+			successDescription:
+				mailSuccessDescription || 'Thanks for subscribing!',
+			hexCode: mailHexCode || '#DCDCDC',
+			imageUrl: mailImageUrl?.length > 0 ? mailImageUrl : undefined,
+		},
+		illustration: getIllustration(illustration),
+		campaignName: campaignName?.includes('not in ophan')
+			? undefined
+			: campaignName,
+		campaignCode,
+		brazeSubscribeAttributeNameAlternate:
+			brazeSubscribeAttributeNameAlternate
+				?.split(',')
+				?.map((a) => a.trim()),
+	};
+	const decodedNewsletter = BaseEmailNewsletterType.decode(newsletter);
+	if (isRight(decodedNewsletter)) {
+		return decodedNewsletter.right;
+	} else {
+		console.log(`Could not decode newsletter: ${newsletter}`);
+	}
+};
 
 /**
  * Identity API requires some values on the newsletter object to be present.
