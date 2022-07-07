@@ -132,11 +132,9 @@ describe('Newsletters service', () => {
 			VALID_NEWSLETTER_ENTRY,
 			CANCELLED_NEWSLETTER_ENTRY,
 		];
-		const cancelledNewsletter = Object.assign(
-			{},
-			{ cancelled: true },
-			EXPECTED_RESULT,
-		);
+		const cancelledNewsletter = Object.assign({}, EXPECTED_RESULT, {
+			cancelled: true,
+		});
 
 		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
 
