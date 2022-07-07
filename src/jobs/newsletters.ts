@@ -115,6 +115,10 @@ function setDefaultValues(
 		brazeNewsletterName: newsletter.brazeNewsletterName ?? 'cancelled',
 		brazeSubscribeEventNamePrefix:
 			newsletter.brazeSubscribeEventNamePrefix ?? 'cancelled',
+		emailEmbed: {
+			...newsletter.emailEmbed,
+			description: newsletter.emailEmbed.description ?? 'cancelled',
+		},
 	};
 }
 
