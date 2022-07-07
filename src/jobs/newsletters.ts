@@ -106,18 +106,25 @@ const rowToNewsletter = ({
 function setDefaultValues(
 	newsletter: CancelledEmailNewsletter,
 ): CancelledEmailNewsletter {
+	const valueOrDefault = (value: string | null | undefined): string => {
+		const defaultValue = 'cancelled';
+		return value ?? defaultValue;
+	};
+
 	return {
 		...newsletter,
-		description: 'cancelled',
-		frequency: newsletter.frequency ?? 'cancelled',
-		brazeSubscribeAttributeName:
-			newsletter.brazeSubscribeAttributeName ?? 'cancelled',
-		brazeNewsletterName: newsletter.brazeNewsletterName ?? 'cancelled',
-		brazeSubscribeEventNamePrefix:
-			newsletter.brazeSubscribeEventNamePrefix ?? 'cancelled',
+		description: valueOrDefault(newsletter.description),
+		frequency: valueOrDefault(newsletter.frequency),
+		brazeSubscribeAttributeName: valueOrDefault(
+			newsletter.brazeSubscribeAttributeName,
+		),
+		brazeNewsletterName: valueOrDefault(newsletter.brazeNewsletterName),
+		brazeSubscribeEventNamePrefix: valueOrDefault(
+			newsletter.brazeSubscribeEventNamePrefix,
+		),
 		emailEmbed: {
 			...newsletter.emailEmbed,
-			description: newsletter.emailEmbed.description ?? 'cancelled',
+			description: valueOrDefault(newsletter.emailEmbed.description),
 		},
 	};
 }
