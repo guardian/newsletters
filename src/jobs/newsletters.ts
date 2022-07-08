@@ -1,13 +1,18 @@
 import { strict as assert } from 'assert';
+import { isRight } from 'fp-ts/lib/Either';
 import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
 import {
 	prepareRows,
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
-import {
-	EmailNewsletter,
-	EmailNewsletterType,
+import type {
+	BaseNewsletter,
 	NewsletterIllustration,
+	NewsletterResponse,
+} from '../models/newsletters';
+import {
+	BaseNewsletterCodec,
+	NewsletterResponseCodec,
 } from '../models/newsletters';
 import {
 	getBrazeAttributeName,
@@ -54,8 +59,8 @@ const rowToNewsletter = ({
 	25: mailHexCode,
 	26: mailImageUrl,
 	27: illustration,
-}: string[]): EmailNewsletter =>
-	({
+}: string[]): void | BaseNewsletter => {
+	const newsletter = {
 		identityName,
 		name,
 		cancelled: isTrue(cancelled),
@@ -98,13 +103,58 @@ const rowToNewsletter = ({
 			brazeSubscribeAttributeNameAlternate
 				?.split(',')
 				?.map((a) => a.trim()),
-	} as EmailNewsletter);
+	};
+	const decodedNewsletter = BaseNewsletterCodec.decode(newsletter);
+	if (isRight(decodedNewsletter)) {
+		return decodedNewsletter.right;
+	} else {
+		console.log(`Could not decode newsletter: ${newsletter}`);
+	}
+};
 
-const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
+/**
+ * Identity API requires some values on the newsletter object to be present.
+ * Those values are not required in the spreadsheet for cancelled newsletters, so we apply default values here.
+ * @param newsletter the newsletter to apply default values to
+ * @returns a copy of `newsletter`
+ */
+function setDefaultValues(newsletter: BaseNewsletter): BaseNewsletter {
+	const valueOrDefault = (value: string | null | undefined): string => {
+		const defaultValue = 'cancelled';
+		return value ?? defaultValue;
+	};
+
+	return {
+		...newsletter,
+		description: valueOrDefault(newsletter.description),
+		frequency: valueOrDefault(newsletter.frequency),
+		brazeSubscribeAttributeName: valueOrDefault(
+			newsletter.brazeSubscribeAttributeName,
+		),
+		brazeNewsletterName: valueOrDefault(newsletter.brazeNewsletterName),
+		brazeSubscribeEventNamePrefix: valueOrDefault(
+			newsletter.brazeSubscribeEventNamePrefix,
+		),
+		emailEmbed: {
+			...newsletter.emailEmbed,
+			description: valueOrDefault(newsletter.emailEmbed.description),
+		},
+	};
+}
+
+const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const rows = await readNewslettersSheet();
-	const newsletters = prepareRows(rows)
-		.map(rowToNewsletter)
-		.filter(EmailNewsletterType.is);
+	const newsletterObjects = prepareRows(rows)
+		.map((row) => rowToNewsletter(row))
+		.filter(BaseNewsletterCodec.is);
+
+	const newsletters = newsletterObjects
+		.map((newsletter) =>
+			newsletter.cancelled ? setDefaultValues(newsletter) : newsletter,
+		)
+		.map(NewsletterResponseCodec.decode)
+		.filter(isRight)
+		.map((_) => _.right);
 
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
 	return newsletters;
