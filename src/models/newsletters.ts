@@ -60,9 +60,12 @@ const baseNewsletterModel = {
 export const BaseEmailNewsletterCodec = t.type({ ...baseNewsletterModel });
 export type BaseEmailNewsletter = t.TypeOf<typeof BaseEmailNewsletterCodec>;
 
-export const EmailNewsletterCodec = t.type({
+export type NewsletterIllustration = t.TypeOf<
+	typeof NewsletterIllustrationCodec
+>;
+
+export const NewsletterResponseCodec = t.type({
 	...baseNewsletterModel,
-	cancelled: t.literal(false),
 	description: NonEmptyString,
 	frequency: NonEmptyString,
 	brazeSubscribeAttributeName: NonEmptyString,
@@ -70,17 +73,6 @@ export const EmailNewsletterCodec = t.type({
 	brazeSubscribeEventNamePrefix: NonEmptyString,
 	brazeNewsletterName: NonEmptyString,
 	emailEmbed: EmailEmbedWithDescriptionCodec,
-});
-
-export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterCodec>;
-
-export type NewsletterIllustration = t.TypeOf<
-	typeof NewsletterIllustrationCodec
->;
-
-export const NewsletterResponseCodec = t.type({
-	...baseNewsletterModel,
-	...EmailNewsletterCodec.props,
 	cancelled: t.boolean,
 });
 export type NewsletterResponse = t.TypeOf<typeof NewsletterResponseCodec>;
