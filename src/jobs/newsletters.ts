@@ -10,9 +10,9 @@ import {
 	BaseEmailNewsletterType,
 	CancelledEmailNewsletter,
 	CancelledEmailNewsletterType,
-	EmailNewsletter,
 	EmailNewsletterType,
 	NewsletterIllustration,
+	NewsletterResponse,
 } from '../models/newsletters';
 import {
 	getBrazeAttributeName,
@@ -144,9 +144,7 @@ function setDefaultValues(
 	};
 }
 
-type AllNewsletters = EmailNewsletter | CancelledEmailNewsletter;
-
-const getEmailNewsletters = async (): Promise<AllNewsletters[]> => {
+const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const rows = await readNewslettersSheet();
 	const newsletterObjects = prepareRows(rows).map((row) =>
 		rowToNewsletter(row),
@@ -164,7 +162,14 @@ const getEmailNewsletters = async (): Promise<AllNewsletters[]> => {
 		.map(setDefaultValues);
 
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
-	return [...newsletters, ...cancelledNewsletters];
+
+	/**
+	 * Convert all newsletters to the type NewsletterResponse, discarding failures
+	 */
+	return [...newsletters, ...cancelledNewsletters]
+		.map((_) => NewsletterResponse.decode(_))
+		.filter(isRight)
+		.map((_) => _.right);
 };
 
 export { getEmailNewsletters, rowToNewsletter };

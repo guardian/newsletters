@@ -77,6 +77,7 @@ export const EmailNewsletterType = t.type({
 });
 
 export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
+
 export type CancelledEmailNewsletter = t.TypeOf<
 	typeof CancelledEmailNewsletterType
 >;
@@ -84,3 +85,10 @@ export type CancelledEmailNewsletter = t.TypeOf<
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationType
 >;
+
+export const NewsletterResponse = t.type({
+	...baseNewsletterModel,
+	...EmailNewsletterType.props,
+	cancelled: t.boolean,
+});
+export type NewsletterResponse = t.TypeOf<typeof NewsletterResponse>;
