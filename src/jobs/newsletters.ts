@@ -164,12 +164,13 @@ const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 		.map((_) => _.right)
 		.map(setDefaultValues);
 
-	assert.ok(!!newsletters.length, 'No newsletters processed!');
+	const allNewsletters = [...newsletters, ...cancelledNewsletters];
+	assert.ok(!!allNewsletters.length, 'No newsletters processed!');
 
 	/**
 	 * Convert all newsletters to the type NewsletterResponse, discarding failures
 	 */
-	return [...newsletters, ...cancelledNewsletters]
+	return allNewsletters
 		.map((_) => NewsletterResponseCodec.decode(_))
 		.filter(isRight)
 		.map((_) => _.right);
