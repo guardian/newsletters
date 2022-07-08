@@ -57,8 +57,8 @@ const baseNewsletterModel = {
 	campaignCode: optional(t.string),
 };
 
-export const BaseEmailNewsletterCodec = t.type({ ...baseNewsletterModel });
-export type BaseEmailNewsletter = t.TypeOf<typeof BaseEmailNewsletterCodec>;
+export const BaseNewsletterCodec = t.type({ ...baseNewsletterModel });
+export type BaseNewsletter = t.TypeOf<typeof BaseNewsletterCodec>;
 
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationCodec

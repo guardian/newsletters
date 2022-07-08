@@ -6,12 +6,12 @@ import {
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
 import type {
-	BaseEmailNewsletter,
+	BaseNewsletter,
 	NewsletterIllustration,
 	NewsletterResponse,
 } from '../models/newsletters';
 import {
-	BaseEmailNewsletterCodec,
+	BaseNewsletterCodec,
 	NewsletterResponseCodec,
 } from '../models/newsletters';
 import {
@@ -59,7 +59,7 @@ const rowToNewsletter = ({
 	25: mailHexCode,
 	26: mailImageUrl,
 	27: illustration,
-}: string[]): void | BaseEmailNewsletter => {
+}: string[]): void | BaseNewsletter => {
 	const newsletter = {
 		identityName,
 		name,
@@ -104,7 +104,7 @@ const rowToNewsletter = ({
 				?.split(',')
 				?.map((a) => a.trim()),
 	};
-	const decodedNewsletter = BaseEmailNewsletterCodec.decode(newsletter);
+	const decodedNewsletter = BaseNewsletterCodec.decode(newsletter);
 	if (isRight(decodedNewsletter)) {
 		return decodedNewsletter.right;
 	} else {
@@ -118,9 +118,7 @@ const rowToNewsletter = ({
  * @param newsletter the newsletter to apply default values to
  * @returns a copy of `newsletter`
  */
-function setDefaultValues(
-	newsletter: BaseEmailNewsletter,
-): BaseEmailNewsletter {
+function setDefaultValues(newsletter: BaseNewsletter): BaseNewsletter {
 	const valueOrDefault = (value: string | null | undefined): string => {
 		const defaultValue = 'cancelled';
 		return value ?? defaultValue;
@@ -148,7 +146,7 @@ const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const rows = await readNewslettersSheet();
 	const newsletterObjects = prepareRows(rows)
 		.map((row) => rowToNewsletter(row))
-		.filter(BaseEmailNewsletterCodec.is);
+		.filter(BaseNewsletterCodec.is);
 
 	const newsletters = newsletterObjects
 		.map((newsletter) =>
