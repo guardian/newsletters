@@ -60,10 +60,6 @@ const baseNewsletterModel = {
 export const BaseEmailNewsletterCodec = t.type({ ...baseNewsletterModel });
 export type BaseEmailNewsletter = t.TypeOf<typeof BaseEmailNewsletterCodec>;
 
-export const CancelledEmailNewsletterCodec = t.type({
-	...baseNewsletterModel,
-	cancelled: t.literal(true),
-});
 export const EmailNewsletterCodec = t.type({
 	...baseNewsletterModel,
 	cancelled: t.literal(false),
@@ -77,10 +73,6 @@ export const EmailNewsletterCodec = t.type({
 });
 
 export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterCodec>;
-
-export type CancelledEmailNewsletter = t.TypeOf<
-	typeof CancelledEmailNewsletterCodec
->;
 
 export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationCodec

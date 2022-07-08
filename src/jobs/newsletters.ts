@@ -7,14 +7,11 @@ import {
 } from '../lib/googleNewsletterSheets';
 import type {
 	BaseEmailNewsletter,
-	CancelledEmailNewsletter,
 	NewsletterIllustration,
 	NewsletterResponse,
 } from '../models/newsletters';
 import {
 	BaseEmailNewsletterCodec,
-	CancelledEmailNewsletterCodec,
-	EmailNewsletterCodec,
 	NewsletterResponseCodec,
 } from '../models/newsletters';
 import {
@@ -122,8 +119,8 @@ const rowToNewsletter = ({
  * @returns a copy of `newsletter`
  */
 function setDefaultValues(
-	newsletter: CancelledEmailNewsletter,
-): CancelledEmailNewsletter {
+	newsletter: BaseEmailNewsletter,
+): BaseEmailNewsletter {
 	const valueOrDefault = (value: string | null | undefined): string => {
 		const defaultValue = 'cancelled';
 		return value ?? defaultValue;
@@ -149,31 +146,20 @@ function setDefaultValues(
 
 const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const rows = await readNewslettersSheet();
-	const newsletterObjects = prepareRows(rows).map((row) =>
-		rowToNewsletter(row),
-	);
+	const newsletterObjects = prepareRows(rows)
+		.map((row) => rowToNewsletter(row))
+		.filter(BaseEmailNewsletterCodec.is);
 
 	const newsletters = newsletterObjects
-		.map(EmailNewsletterCodec.decode)
+		.map((newsletter) =>
+			newsletter.cancelled ? setDefaultValues(newsletter) : newsletter,
+		)
+		.map(NewsletterResponseCodec.decode)
 		.filter(isRight)
 		.map((_) => _.right);
 
-	const cancelledNewsletters = newsletterObjects
-		.map(CancelledEmailNewsletterCodec.decode)
-		.filter(isRight)
-		.map((_) => _.right)
-		.map(setDefaultValues);
-
-	const allNewsletters = [...newsletters, ...cancelledNewsletters];
-	assert.ok(!!allNewsletters.length, 'No newsletters processed!');
-
-	/**
-	 * Convert all newsletters to the type NewsletterResponse, discarding failures
-	 */
-	return allNewsletters
-		.map((_) => NewsletterResponseCodec.decode(_))
-		.filter(isRight)
-		.map((_) => _.right);
+	assert.ok(!!newsletters.length, 'No newsletters processed!');
+	return newsletters;
 };
 
 export { getEmailNewsletters, rowToNewsletter };
