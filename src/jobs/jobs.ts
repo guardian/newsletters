@@ -6,7 +6,7 @@ const buildNewsletters = async (): Promise<void> => {
 	try {
 		console.log(`Getting newsletters from Google sheet`);
 		const newsletters = await getEmailNewsletters();
-		console.log(`Newsletters processed`);
+		console.log(`${newsletters.length} newsletters processed`);
 		console.log(`Uploading to S3`);
 		await s3upload({
 			Bucket: NEWSLETTERS_BUCKET_NAME,
@@ -14,7 +14,7 @@ const buildNewsletters = async (): Promise<void> => {
 			Body: JSON.stringify(newsletters),
 		});
 		console.log(`Uploaded to S3`);
-		console.log(`${newsletters.length} newsletters successfully processed`);
+		console.log(`Finish`);
 	} catch (e) {
 		console.error((e as Error).message);
 		throw e;
