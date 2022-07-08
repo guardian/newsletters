@@ -2,7 +2,7 @@ import * as t from 'io-ts';
 import { optional } from 'io-ts-extra';
 import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 
-const NewsletterIllustrationType = t.type({
+const NewsletterIllustrationCodec = t.type({
 	circle: t.string,
 });
 
@@ -16,7 +16,7 @@ const baseEmailEmbedModel = {
 	imageUrl: optional(t.string), //deprecated
 };
 
-const EmailEmbedType = t.type({
+const EmailEmbedCodec = t.type({
 	...baseEmailEmbedModel,
 });
 
@@ -27,7 +27,7 @@ const EmailEmbedType = t.type({
 // is required  as a NonEmptyString on an EmailNewsletter.
 // Consequently, EmailEmbed.description will always be a
 // NonEmptyString for a (non-cancelled) EmailNewsletter.
-const EmailEmbedWithDescriptionType = t.type({
+const EmailEmbedWithDescriptionCodec = t.type({
 	...baseEmailEmbedModel,
 	description: NonEmptyString,
 });
@@ -46,25 +46,25 @@ const baseNewsletterModel = {
 	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: optional(t.string),
 	brazeNewsletterName: optional(t.string),
-	emailEmbed: EmailEmbedType,
+	emailEmbed: EmailEmbedCodec,
 	restricted: t.boolean,
 	paused: t.boolean,
 	emailConfirmation: t.boolean,
 	signupPage: optional(t.string),
 	exampleUrl: optional(t.string),
-	illustration: optional(NewsletterIllustrationType),
+	illustration: optional(NewsletterIllustrationCodec),
 	campaignName: optional(t.string),
 	campaignCode: optional(t.string),
 };
 
-export const BaseEmailNewsletterType = t.type({ ...baseNewsletterModel });
-export type BaseEmailNewsletter = t.TypeOf<typeof BaseEmailNewsletterType>;
+export const BaseEmailNewsletterCodec = t.type({ ...baseNewsletterModel });
+export type BaseEmailNewsletter = t.TypeOf<typeof BaseEmailNewsletterCodec>;
 
-export const CancelledEmailNewsletterType = t.type({
+export const CancelledEmailNewsletterCodec = t.type({
 	...baseNewsletterModel,
 	cancelled: t.literal(true),
 });
-export const EmailNewsletterType = t.type({
+export const EmailNewsletterCodec = t.type({
 	...baseNewsletterModel,
 	cancelled: t.literal(false),
 	description: NonEmptyString,
@@ -73,22 +73,22 @@ export const EmailNewsletterType = t.type({
 	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: NonEmptyString,
 	brazeNewsletterName: NonEmptyString,
-	emailEmbed: EmailEmbedWithDescriptionType,
+	emailEmbed: EmailEmbedWithDescriptionCodec,
 });
 
-export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
+export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterCodec>;
 
 export type CancelledEmailNewsletter = t.TypeOf<
-	typeof CancelledEmailNewsletterType
+	typeof CancelledEmailNewsletterCodec
 >;
 
 export type NewsletterIllustration = t.TypeOf<
-	typeof NewsletterIllustrationType
+	typeof NewsletterIllustrationCodec
 >;
 
-export const NewsletterResponse = t.type({
+export const NewsletterResponseCodec = t.type({
 	...baseNewsletterModel,
-	...EmailNewsletterType.props,
+	...EmailNewsletterCodec.props,
 	cancelled: t.boolean,
 });
-export type NewsletterResponse = t.TypeOf<typeof NewsletterResponse>;
+export type NewsletterResponse = t.TypeOf<typeof NewsletterResponseCodec>;

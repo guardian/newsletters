@@ -5,14 +5,17 @@ import {
 	prepareRows,
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
-import {
+import type {
 	BaseEmailNewsletter,
-	BaseEmailNewsletterType,
 	CancelledEmailNewsletter,
-	CancelledEmailNewsletterType,
-	EmailNewsletterType,
 	NewsletterIllustration,
 	NewsletterResponse,
+} from '../models/newsletters';
+import {
+	BaseEmailNewsletterCodec,
+	CancelledEmailNewsletterCodec,
+	EmailNewsletterCodec,
+	NewsletterResponseCodec,
 } from '../models/newsletters';
 import {
 	getBrazeAttributeName,
@@ -104,7 +107,7 @@ const rowToNewsletter = ({
 				?.split(',')
 				?.map((a) => a.trim()),
 	};
-	const decodedNewsletter = BaseEmailNewsletterType.decode(newsletter);
+	const decodedNewsletter = BaseEmailNewsletterCodec.decode(newsletter);
 	if (isRight(decodedNewsletter)) {
 		return decodedNewsletter.right;
 	} else {
@@ -151,12 +154,12 @@ const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	);
 
 	const newsletters = newsletterObjects
-		.map(EmailNewsletterType.decode)
+		.map(EmailNewsletterCodec.decode)
 		.filter(isRight)
 		.map((_) => _.right);
 
 	const cancelledNewsletters = newsletterObjects
-		.map(CancelledEmailNewsletterType.decode)
+		.map(CancelledEmailNewsletterCodec.decode)
 		.filter(isRight)
 		.map((_) => _.right)
 		.map(setDefaultValues);
@@ -167,7 +170,7 @@ const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	 * Convert all newsletters to the type NewsletterResponse, discarding failures
 	 */
 	return [...newsletters, ...cancelledNewsletters]
-		.map((_) => NewsletterResponse.decode(_))
+		.map((_) => NewsletterResponseCodec.decode(_))
 		.filter(isRight)
 		.map((_) => _.right);
 };
