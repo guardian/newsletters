@@ -59,7 +59,7 @@ const rowToNewsletter = ({
 	25: mailHexCode,
 	26: mailImageUrl,
 	27: illustration,
-}: string[]): void | BaseNewsletter => {
+}: string[]): BaseNewsletter | undefined => {
 	const newsletter = {
 		identityName,
 		name,
@@ -104,11 +104,14 @@ const rowToNewsletter = ({
 				?.split(',')
 				?.map((a) => a.trim()),
 	};
+
 	const decodedNewsletter = BaseNewsletterCodec.decode(newsletter);
+
 	if (isRight(decodedNewsletter)) {
 		return decodedNewsletter.right;
 	} else {
 		console.log(`Could not decode newsletter: ${newsletter}`);
+		return undefined;
 	}
 };
 

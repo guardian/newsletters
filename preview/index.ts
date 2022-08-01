@@ -2,10 +2,11 @@ import { readFileSync, writeFileSync } from 'fs';
 import { NonEmptyString } from 'io-ts-types';
 import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
+	BaseNewsletter,
 	CancelledEmailNewsletterType,
-	EmailNewsletter,
-	EmailNewsletterType,
+	NewsletterResponseCodec,
 } from '../src/models/newsletters';
+import type { NewsletterResponse } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
 
 const USE_CODE_DATA = !!process.env.USE_CODE_DATA;
@@ -14,18 +15,15 @@ const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
 const logFeedback = (
 	versionNumber: string,
-	newsletters: EmailNewsletter[],
+	newsletters: NewsletterResponse[],
 ): void => {
 	console.log({ versionNumber });
-	console.log('INDEX\tVALID\tCurrent\t CANCELLED\tNAME');
+	console.log('INDEX\tVALID\tCANCELLED\tNAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
 			index,
 			'\t',
-			EmailNewsletterType.is(newsletter) ||
-				CancelledEmailNewsletterType.is(newsletter),
-			'\t',
-			EmailNewsletterType.is(newsletter),
+			NewsletterResponseCodec.is(newsletter),
 			'\t',
 			CancelledEmailNewsletterType.is(newsletter),
 			'\t\t',
@@ -38,7 +36,7 @@ const getEmailNewslettersFromLocalCsv = async (
 	config: {
 		includeCancelled?: boolean;
 	} = {},
-): Promise<EmailNewsletter[]> => {
+): Promise<NewsletterResponse[]> => {
 	const csvData = await readFileSync(
 		PREVIEW_DATA_SOURCE_FILE_PATH,
 	).toString();
@@ -52,30 +50,24 @@ const getEmailNewslettersFromLocalCsv = async (
 	// row.
 	// If the first row of data does not have these columns populated, the first
 	// group will have empty values, so will fail the EmailNewsletter.is test
-	let lastGroup = '';
-	let lastTheme = '';
-
-	unvalidatedNewsletters.forEach((newsletter) => {
-		if (newsletter.group) {
-			lastGroup = newsletter.group;
-		} else {
-			newsletter.group = lastGroup as NonEmptyString;
-		}
-		if (newsletter.theme) {
-			lastTheme = newsletter.theme;
-		} else {
-			newsletter.theme = lastTheme as NonEmptyString;
-		}
+	const x = unvalidatedNewsletters.filter(Boolean);
+	const y = x.reduce((prev, curr) => {
+		return {
+			...curr,
+			group: curr?.group || prev?.group,
+			theme: curr?.theme || prev?.theme,
+		};
 	});
 
-	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
+	logFeedback(cellsInRows[0][0], unvalidatedNewslettersWithGroupAndTheme);
 
 	const includeInData = config.includeCancelled
 		? (_: unknown): boolean =>
-				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_)
-		: EmailNewsletterType.is;
+				NewsletterResponseCodec.is(_) ||
+				CancelledEmailNewsletterType.is(_)
+		: NewsletterResponseCodec.is;
 
-	return unvalidatedNewsletters.filter(includeInData);
+	return unvalidatedNewslettersWithGroupAndTheme.filter(includeInData);
 };
 
 const writePreviewJson = async (): Promise<void> => {
