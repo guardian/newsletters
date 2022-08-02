@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 import { optional } from 'io-ts-extra';
-import { NonEmptyString } from 'io-ts-types';
+import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 
 const NewsletterIllustrationCodec = t.type({
 	circle: t.string,

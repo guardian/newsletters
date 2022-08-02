@@ -1,8 +1,8 @@
 import { strict as assert } from 'assert';
 import { fold, isRight } from 'fp-ts/lib/Either';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { pipe } from 'fp-ts/lib/function';
 import * as t from 'io-ts';
-import { NonEmptyString } from 'io-ts-types';
+import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
 import {
 	prepareRows,
@@ -111,12 +111,12 @@ const getNewsletterFromRowData = (rowData: string[]): BaseNewsletter => {
 	};
 };
 
-const rowToNewsletter = (rowData: string[]): BaseNewsletter | undefined => {
-	const newsletter = getNewsletterFromRowData(rowData);
-
+const validateNewsletter = (
+	newsletter: BaseNewsletter,
+): BaseNewsletter | undefined => {
 	// Failure scenario: console log the errors and return undefined
 	const onLeft = (errors: t.Errors): undefined => {
-		console.log(`Could not decode newsletter: ${newsletter}`);
+		console.log(`Could not decode newsletter: ${newsletter.name}`);
 		console.log(
 			errors.map((error: t.ValidationError) =>
 				error.context.map(({ key }) => key).join('.'),
@@ -164,7 +164,8 @@ function setDefaultValues(newsletter: BaseNewsletter): BaseNewsletter {
 const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const rows = await readNewslettersSheet();
 	const newsletterObjects = prepareRows(rows)
-		.map((row) => rowToNewsletter(row))
+		.map((row) => getNewsletterFromRowData(row))
+		.map((newsletter) => validateNewsletter(newsletter))
 		.filter(BaseNewsletterCodec.is);
 
 	const newsletters = newsletterObjects
@@ -179,4 +180,4 @@ const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	return newsletters;
 };
 
-export { getEmailNewsletters, rowToNewsletter };
+export { getEmailNewsletters, validateNewsletter, getNewsletterFromRowData };
