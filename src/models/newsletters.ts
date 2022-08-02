@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 import { optional } from 'io-ts-extra';
-import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
+import { NonEmptyString } from 'io-ts-types';
 
 const NewsletterIllustrationCodec = t.type({
 	circle: t.string,
@@ -76,3 +76,8 @@ export const NewsletterResponseCodec = t.type({
 	cancelled: t.boolean,
 });
 export type NewsletterResponse = t.TypeOf<typeof NewsletterResponseCodec>;
+
+export const CancelledEmailNewsletterType = t.type({
+	...baseNewsletterModel,
+	cancelled: t.literal(true),
+});

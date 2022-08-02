@@ -1,5 +1,8 @@
 import { strict as assert } from 'assert';
-import { isRight } from 'fp-ts/lib/Either';
+import { fold, isRight } from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/lib/pipeable';
+import * as t from 'io-ts';
+import { NonEmptyString } from 'io-ts-types';
 import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
 import {
 	prepareRows,
@@ -30,39 +33,41 @@ const getIllustration = (
 const isTrue = (str: string | undefined): boolean =>
 	str !== undefined ? str.toLowerCase() === 'true' : false;
 
-const rowToNewsletter = ({
-	[THEME_INDEX]: theme,
-	// column 2 ("name") is not used.
-	[GROUP_INDEX]: group,
-	3: name, // column headding on the sheet is "Displayed Name"
-	4: frequency,
-	5: description,
-	6: identityName,
-	7: listIdV1,
-	8: listId,
-	9: brazeSubscribeEventNamePrefix,
-	10: brazeNewsletterName,
-	11: brazeSubscribeAttributeName,
-	12: brazeSubscribeAttributeNameAlternate,
-	13: campaignName,
-	14: campaignCode,
-	15: restricted,
-	16: paused,
-	17: cancelled,
-	18: emailConfirmation,
-	[PREVIEW_INDEX]: exampleUrl,
-	20: signupPage,
-	21: mailName,
-	22: mailTitle,
-	23: mailDescription,
-	24: mailSuccessDescription,
-	25: mailHexCode,
-	26: mailImageUrl,
-	27: illustration,
-}: string[]): BaseNewsletter | undefined => {
-	const newsletter = {
-		identityName,
-		name,
+const getNewsletterFromRowData = (rowData: string[]): BaseNewsletter => {
+	const {
+		[THEME_INDEX]: theme,
+		// column 2 ("name") is not used.
+		[GROUP_INDEX]: group,
+		3: name, // column headding on the sheet is "Displayed Name"
+		4: frequency,
+		5: description,
+		6: identityName,
+		7: listIdV1,
+		8: listId,
+		9: brazeSubscribeEventNamePrefix,
+		10: brazeNewsletterName,
+		11: brazeSubscribeAttributeName,
+		12: brazeSubscribeAttributeNameAlternate,
+		13: campaignName,
+		14: campaignCode,
+		15: restricted,
+		16: paused,
+		17: cancelled,
+		18: emailConfirmation,
+		[PREVIEW_INDEX]: exampleUrl,
+		20: signupPage,
+		21: mailName,
+		22: mailTitle,
+		23: mailDescription,
+		24: mailSuccessDescription,
+		25: mailHexCode,
+		26: mailImageUrl,
+		27: illustration,
+	} = rowData;
+
+	return {
+		identityName: identityName as NonEmptyString,
+		name: name as NonEmptyString,
 		cancelled: isTrue(cancelled),
 		restricted: isTrue(restricted),
 		paused: isTrue(paused),
@@ -72,8 +77,8 @@ const rowToNewsletter = ({
 			brazeSubscribeAttributeName ||
 			getBrazeAttributeName(brazeSubscribeEventNamePrefix),
 		brazeSubscribeEventNamePrefix,
-		theme: theme?.toLowerCase(),
-		group,
+		theme: theme?.toLowerCase() as NonEmptyString,
+		group: group as NonEmptyString,
 		description: description,
 		frequency,
 		listIdV1: parseInt(listIdV1),
@@ -81,17 +86,17 @@ const rowToNewsletter = ({
 		exampleUrl,
 		signupPage: removeSitePrefix(signupPage),
 		emailEmbed: {
-			name: mailName || name,
+			name: (mailName || name) as NonEmptyString,
 			title: replaceLastSpaceByNonBreakingSpace(
 				mailTitle || `Sign up for ${mailName || name}`,
-			),
+			) as NonEmptyString,
 			description: mailDescription ? mailDescription : description,
-			successHeadline: isTrue(emailConfirmation)
+			successHeadline: (isTrue(emailConfirmation)
 				? 'Check your email inbox and confirm your subscription'
-				: 'Subscription confirmed',
-			successDescription:
-				mailSuccessDescription || 'Thanks for subscribing!',
-			hexCode: mailHexCode || '#DCDCDC',
+				: 'Subscription confirmed') as NonEmptyString,
+			successDescription: (mailSuccessDescription ||
+				'Thanks for subscribing!') as NonEmptyString,
+			hexCode: (mailHexCode || '#DCDCDC') as NonEmptyString,
 			imageUrl: mailImageUrl?.length > 0 ? mailImageUrl : undefined,
 		},
 		illustration: getIllustration(illustration),
@@ -104,15 +109,26 @@ const rowToNewsletter = ({
 				?.split(',')
 				?.map((a) => a.trim()),
 	};
+};
 
-	const decodedNewsletter = BaseNewsletterCodec.decode(newsletter);
+const rowToNewsletter = (rowData: string[]): BaseNewsletter | undefined => {
+	const newsletter = getNewsletterFromRowData(rowData);
 
-	if (isRight(decodedNewsletter)) {
-		return decodedNewsletter.right;
-	} else {
+	// Failure scenario: console log the errors and return undefined
+	const onLeft = (errors: t.Errors): undefined => {
 		console.log(`Could not decode newsletter: ${newsletter}`);
+		console.log(
+			errors.map((error: t.ValidationError) =>
+				error.context.map(({ key }) => key).join('.'),
+			),
+		);
 		return undefined;
-	}
+	};
+
+	// Success scenario: return validated newsletter
+	const onRight = (newsletter: BaseNewsletter): BaseNewsletter => newsletter;
+
+	return pipe(BaseNewsletterCodec.decode(newsletter), fold(onLeft, onRight));
 };
 
 /**

@@ -103,49 +103,57 @@ describe('Newsletters service', () => {
 		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
 	});
 
-	it('getEmailNewsletters', async () => {
-		const mockResponse = [VALID_NEWSLETTER_ENTRY];
-		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
+	describe('getEmailNewsletters', () => {
+		it('returns expected result for standard entry', async () => {
+			const mockResponse = [VALID_NEWSLETTER_ENTRY];
+			jest.spyOn(mock, 'prepareRows').mockImplementation(
+				() => mockResponse,
+			);
 
-		const got = await getEmailNewsletters();
+			const got = await getEmailNewsletters();
 
-		expect(mock.readNewslettersSheet).toBeCalled();
-		expect(got).toEqual([EXPECTED_RESULT]);
-	});
-
-	it('filters incomplete newsletter entry', async () => {
-		const mockResponse = [
-			VALID_NEWSLETTER_ENTRY,
-			NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY,
-		];
-
-		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
-
-		const got = await getEmailNewsletters();
-
-		expect(mock.readNewslettersSheet).toBeCalled();
-		expect(got).toEqual([EXPECTED_RESULT]);
-	});
-
-	it('filters cancelled newsletter entry', async () => {
-		const mockResponse = [
-			VALID_NEWSLETTER_ENTRY,
-			CANCELLED_NEWSLETTER_ENTRY,
-		];
-		const cancelledNewsletter = Object.assign({}, EXPECTED_RESULT, {
-			cancelled: true,
+			expect(mock.readNewslettersSheet).toBeCalled();
+			expect(got).toEqual([EXPECTED_RESULT]);
 		});
 
-		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
+		it('filters incomplete newsletter entry', async () => {
+			const mockResponse = [
+				VALID_NEWSLETTER_ENTRY,
+				NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY,
+			];
 
-		const got = await getEmailNewsletters();
-		expect(mock.readNewslettersSheet).toBeCalled();
+			jest.spyOn(mock, 'prepareRows').mockImplementation(
+				() => mockResponse,
+			);
 
-		expect(got).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining(EXPECTED_RESULT),
-				expect.objectContaining(cancelledNewsletter),
-			]),
-		);
+			const got = await getEmailNewsletters();
+
+			expect(mock.readNewslettersSheet).toBeCalled();
+			expect(got).toEqual([EXPECTED_RESULT]);
+		});
+
+		it('filters cancelled newsletter entry', async () => {
+			const mockResponse = [
+				VALID_NEWSLETTER_ENTRY,
+				CANCELLED_NEWSLETTER_ENTRY,
+			];
+			const cancelledNewsletter = Object.assign({}, EXPECTED_RESULT, {
+				cancelled: true,
+			});
+
+			jest.spyOn(mock, 'prepareRows').mockImplementation(
+				() => mockResponse,
+			);
+
+			const got = await getEmailNewsletters();
+			expect(mock.readNewslettersSheet).toBeCalled();
+
+			expect(got).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining(EXPECTED_RESULT),
+					expect.objectContaining(cancelledNewsletter),
+				]),
+			);
+		});
 	});
 });
