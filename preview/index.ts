@@ -5,6 +5,7 @@ import {
 	validateNewsletter,
 } from '../src/jobs/newsletters';
 import {
+	BaseNewsletter,
 	CancelledEmailNewsletterType,
 	NewsletterResponseCodec,
 } from '../src/models/newsletters';
@@ -51,7 +52,10 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	// group will have empty values, so will fail the `is` test
 
 	// TODO: Remove the any types
-	const addGroupAndThemeReducer = (result: any, curr: any): any => {
+	const addGroupAndThemeReducer = (
+		result: BaseNewsletter[],
+		curr: BaseNewsletter,
+	): BaseNewsletter[] => {
 		const prev = result[result.length - 1];
 		return [
 			...result,
