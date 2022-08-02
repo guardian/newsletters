@@ -50,8 +50,6 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	// row.
 	// If the first row of data does not have these columns populated, the first
 	// group will have empty values, so will fail the `is` test
-
-	// TODO: Remove the any types
 	const addGroupAndThemeReducer = (
 		result: BaseNewsletter[],
 		curr: BaseNewsletter,
