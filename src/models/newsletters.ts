@@ -64,6 +64,8 @@ export type NewsletterIllustration = t.TypeOf<
 	typeof NewsletterIllustrationCodec
 >;
 
+// See corresponding scala definition in the frontend project
+// https://github.com/guardian/frontend/blob/c70a2d5d1a1374e0de0e9cf408116c7b76569bd0/common/app/services/newsletters/model/NewsletterResponse.scala
 export const NewsletterResponseCodec = t.type({
 	...baseNewsletterModel,
 	description: NonEmptyString,
