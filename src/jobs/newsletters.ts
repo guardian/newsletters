@@ -14,8 +14,8 @@ import type {
 	NewsletterResponse,
 } from '../models/newsletters';
 import {
-	BaseNewsletterCodec,
-	NewsletterResponseCodec,
+	BaseNewsletterValidator,
+	NewsletterResponseValidator,
 } from '../models/newsletters';
 import {
 	getBrazeAttributeName,
@@ -128,7 +128,10 @@ const validateNewsletter = (
 	// Success scenario: return validated newsletter
 	const onRight = (newsletter: BaseNewsletter): BaseNewsletter => newsletter;
 
-	return pipe(BaseNewsletterCodec.decode(newsletter), fold(onLeft, onRight));
+	return pipe(
+		BaseNewsletterValidator.decode(newsletter),
+		fold(onLeft, onRight),
+	);
 };
 
 /**
@@ -166,13 +169,13 @@ const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const newsletterObjects = prepareRows(rows)
 		.map((row) => getNewsletterFromRowData(row))
 		.map((newsletter) => validateNewsletter(newsletter))
-		.filter(BaseNewsletterCodec.is);
+		.filter(BaseNewsletterValidator.is);
 
 	const newsletters = newsletterObjects
 		.map((newsletter) =>
 			newsletter.cancelled ? setDefaultValues(newsletter) : newsletter,
 		)
-		.map(NewsletterResponseCodec.decode)
+		.map(NewsletterResponseValidator.decode)
 		.filter(isRight)
 		.map((_) => _.right);
 

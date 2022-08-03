@@ -7,7 +7,7 @@ import {
 import {
 	BaseNewsletter,
 	CancelledEmailNewsletterType,
-	NewsletterResponseCodec,
+	NewsletterResponseValidator,
 } from '../src/models/newsletters';
 import type { NewsletterResponse } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
@@ -21,12 +21,10 @@ const logFeedback = (
 	newsletters: NewsletterResponse[],
 ): void => {
 	console.log({ versionNumber });
-	console.log('INDEX\tVALID\tCANCELLED\tNAME');
+	console.log('INDEX\tCANCELLED\tNAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
 			index,
-			'\t',
-			NewsletterResponseCodec.is(newsletter),
 			'\t',
 			CancelledEmailNewsletterType.is(newsletter),
 			'\t',
@@ -41,7 +39,7 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 	const csvData = readFileSync(PREVIEW_DATA_SOURCE_FILE_PATH).toString();
 	const cellsInRows = parseStringifiedCSV(csvData);
 
-	// rowToNewsletter casts its results as EmailNewsletter, but doesn't validate
+	// getNewsletterFromRowData casts its results as EmailNewsletter, but doesn't validate
 	// the values - this is done later by the `is` function
 	const newsletters = cellsInRows.slice(1).map(getNewsletterFromRowData);
 
@@ -54,7 +52,9 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 		result: BaseNewsletter[],
 		curr: BaseNewsletter,
 	): BaseNewsletter[] => {
-		const prev = result[result.length - 1];
+		// Extract previous result to use as default values for group/theme
+		const prev = result.length ? result[result.length - 1] : curr;
+
 		return [
 			...result,
 			{
@@ -69,7 +69,7 @@ const getEmailNewslettersFromLocalCsv = async (): Promise<
 		.reduce(addGroupAndThemeReducer, [])
 		.filter(Boolean)
 		.map(validateNewsletter)
-		.filter(NewsletterResponseCodec.is);
+		.filter(NewsletterResponseValidator.is);
 
 	logFeedback(cellsInRows[0][0], validatedNewsletters);
 
