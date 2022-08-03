@@ -1,7 +1,14 @@
 # Newsletters
 
-Newsletter source bootstrapped with [ts-node-starter-kit](https://github.com/guardian/ts-node-starter-kit)
-Cron job which create a newsletter file from the newsletter master sheet
+This is the Newsletter API service. The service is an AWS scheduled lambda, that runs every 5 minutes and:
+1. reads newsletter data from the Google spreadsheet (you can find the CODE version here: https://docs.google.com/spreadsheets/d/1_eN5NTcWOUyLLLKUJmrGZMlz1l4Zt4taTUFxD-2Bl_k/edit#gid=0)
+2. validates this data and uploads it to an S3 bucket
+
+The s3 bucket is cached by fastly on CODE and PROD. The urls are:
+
+* [CODE](https://newsletters.code.dev-guardianapis.com/newsletters)
+* [PROD](https://newsletters.guardianapis.com/newsletters)
+* [DEVELOPMENT](https://aws-frontend-newsletters-source.s3.eu-west-1.amazonaws.com/DEVELOPMENT/newsletters)
 
 ## Setting up your development environment
 
@@ -20,16 +27,6 @@ Stored is AWS Systems Manager > Parameter Store, under path: `/${STAGE}/newslett
 
 * `spreadsheet.id`
 * `google.key`
-
-## Deployment
-
-The service is an AWS scheduled lambda, run every 5 minutes.
-The newsletters file is generated on s3 and cached by fastly on CODE and PROD.
-The urls are:
-
-* [CODE](https://newsletters.code.dev-guardianapis.com/newsletters)
-* [PROD](https://newsletters.guardianapis.com/newsletters)
-* [DEVELOPMENT](https://aws-frontend-newsletters-source.s3.eu-west-1.amazonaws.com/DEVELOPMENT/newsletters)
 
 ## Architecture
 
