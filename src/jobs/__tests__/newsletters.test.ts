@@ -5,51 +5,48 @@ import { getEmailNewsletters } from '../newsletters';
 const FREQUENCY_INDEX = 5;
 const CANCELLED_INDEX = 17;
 
-const EXPECTED_RESULTS = [
-	{
-		identityName: 'the-upside',
-		name: 'The Upside',
-		cancelled: false,
-		brazeNewsletterName: 'Editorial_TheUpside',
-		brazeSubscribeAttributeName: 'TheUpside_Subscribe_Email',
-		brazeSubscribeEventNamePrefix: 'the_upside',
-		theme: 'features',
-		group: 'Features',
+const EXPECTED_RESULT = {
+	identityName: 'the-upside',
+	name: 'The Upside',
+	cancelled: false,
+	brazeNewsletterName: 'Editorial_TheUpside',
+	brazeSubscribeAttributeName: 'TheUpside_Subscribe_Email',
+	brazeSubscribeEventNamePrefix: 'the_upside',
+	theme: 'features',
+	group: 'Features',
+	description:
+		'Journalism that uncovers real solutions: people, movements and innovations offering answers to our most pressing problems. We’ll round up the best articles for you every week.',
+	frequency: 'Weekly',
+	listIdV1: -1,
+	listId: 4205,
+	exampleUrl: '/world/series/the-upside-weekly-report/latest/email',
+	signupPage: '/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
+	restricted: false,
+	emailEmbed: {
+		name: 'Email name, if not present default to name',
+		title: replaceLastSpaceByNonBreakingSpace(
+			'Email title, if not present default Sign up for + title',
+		),
 		description:
-			'Journalism that uncovers real solutions: people, movements and innovations offering answers to our most pressing problems. We’ll round up the best articles for you every week.',
-		frequency: 'Weekly',
-		listIdV1: -1,
-		listId: 4205,
-		exampleUrl: '/world/series/the-upside-weekly-report/latest/email',
-		signupPage:
-			'/world/2018/feb/12/the-upside-sign-up-for-our-weekly-email',
-		restricted: false,
-		emailEmbed: {
-			name: 'Email name, if not present default to name',
-			title: replaceLastSpaceByNonBreakingSpace(
-				'Email title, if not present default Sign up for + title',
-			),
-			description:
-				"News doesn’t have to be bad. Get a weekly shot of optimism with real solutions to the world's most pressing problems.",
-			successHeadline: 'Subscription confirmed',
-			successDescription:
-				"Thanks for subscribing. We'll send you The Upside every week",
-			hexCode: '#DCDCDC',
-			imageUrl: 'imageUrl',
-		},
-		illustration: {
-			circle: 'illustration',
-		},
-		campaignName: 'testCampaignName',
-		campaignCode: 'testCampaignCode',
-		brazeSubscribeAttributeNameAlternate: [
-			'brazeSubscribeAttributeNameAlternate1',
-			'brazeSubscribeAttributeNameAlternate2',
-		],
-		paused: true,
-		emailConfirmation: false,
+			"News doesn’t have to be bad. Get a weekly shot of optimism with real solutions to the world's most pressing problems.",
+		successHeadline: 'Subscription confirmed',
+		successDescription:
+			"Thanks for subscribing. We'll send you The Upside every week",
+		hexCode: '#DCDCDC',
+		imageUrl: 'imageUrl',
 	},
-];
+	illustration: {
+		circle: 'illustration',
+	},
+	campaignName: 'testCampaignName',
+	campaignCode: 'testCampaignCode',
+	brazeSubscribeAttributeNameAlternate: [
+		'brazeSubscribeAttributeNameAlternate1',
+		'brazeSubscribeAttributeNameAlternate2',
+	],
+	paused: true,
+	emailConfirmation: false,
+};
 
 const VALID_NEWSLETTER_ENTRY = [
 	'FEATURES',
@@ -103,45 +100,60 @@ const CANCELLED_NEWSLETTER_ENTRY = [
 describe('Newsletters service', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
 	});
 
-	it('getEmailNewsletters', async () => {
-		const mockResponse = [VALID_NEWSLETTER_ENTRY];
-		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
-		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
+	describe('getEmailNewsletters', () => {
+		it('returns expected result for standard entry', async () => {
+			const mockResponse = [VALID_NEWSLETTER_ENTRY];
+			jest.spyOn(mock, 'prepareRows').mockImplementation(
+				() => mockResponse,
+			);
 
-		const got = await getEmailNewsletters();
+			const got = await getEmailNewsletters();
 
-		expect(mock.readNewslettersSheet).toBeCalled();
-		expect(got).toEqual(EXPECTED_RESULTS);
-	});
+			expect(mock.readNewslettersSheet).toBeCalled();
+			expect(got).toEqual([EXPECTED_RESULT]);
+		});
 
-	it('filters incomplete newsletter entry', async () => {
-		const mockResponse = [
-			VALID_NEWSLETTER_ENTRY,
-			NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY,
-		];
+		it('filters incomplete newsletter entry', async () => {
+			const mockResponse = [
+				VALID_NEWSLETTER_ENTRY,
+				NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY,
+			];
 
-		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
-		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
+			jest.spyOn(mock, 'prepareRows').mockImplementation(
+				() => mockResponse,
+			);
 
-		const got = await getEmailNewsletters();
+			const got = await getEmailNewsletters();
 
-		expect(mock.readNewslettersSheet).toBeCalled();
-		expect(got).toEqual(EXPECTED_RESULTS);
-	});
+			expect(mock.readNewslettersSheet).toBeCalled();
+			expect(got).toEqual([EXPECTED_RESULT]);
+		});
 
-	it('filters cancelled newsletter entry', async () => {
-		const mockResponse = [
-			VALID_NEWSLETTER_ENTRY,
-			CANCELLED_NEWSLETTER_ENTRY,
-		];
+		it('filters cancelled newsletter entry', async () => {
+			const mockResponse = [
+				VALID_NEWSLETTER_ENTRY,
+				CANCELLED_NEWSLETTER_ENTRY,
+			];
+			const cancelledNewsletter = Object.assign({}, EXPECTED_RESULT, {
+				cancelled: true,
+			});
 
-		jest.spyOn(mock, 'readNewslettersSheet').mockImplementation(jest.fn());
-		jest.spyOn(mock, 'prepareRows').mockImplementation(() => mockResponse);
+			jest.spyOn(mock, 'prepareRows').mockImplementation(
+				() => mockResponse,
+			);
 
-		const got = await getEmailNewsletters();
-		expect(mock.readNewslettersSheet).toBeCalled();
-		expect(got).toEqual(EXPECTED_RESULTS);
+			const got = await getEmailNewsletters();
+			expect(mock.readNewslettersSheet).toBeCalled();
+
+			expect(got).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining(EXPECTED_RESULT),
+					expect.objectContaining(cancelledNewsletter),
+				]),
+			);
+		});
 	});
 });

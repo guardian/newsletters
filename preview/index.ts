@@ -1,11 +1,15 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { NonEmptyString } from 'io-ts-types';
-import { getEmailNewsletters, rowToNewsletter } from '../src/jobs/newsletters';
 import {
+	getEmailNewsletters,
+	getNewsletterFromRowData,
+	validateNewsletter,
+} from '../src/jobs/newsletters';
+import {
+	BaseNewsletter,
 	CancelledEmailNewsletterType,
-	EmailNewsletter,
-	EmailNewsletterType,
+	NewsletterResponseValidator,
 } from '../src/models/newsletters';
+import type { NewsletterResponse } from '../src/models/newsletters';
 import { parseStringifiedCSV } from './csv';
 
 const USE_CODE_DATA = !!process.env.USE_CODE_DATA;
@@ -14,68 +18,62 @@ const PREVIEW_DATA_SOURCE_FILE_PATH = './preview/sampleData.csv';
 
 const logFeedback = (
 	versionNumber: string,
-	newsletters: EmailNewsletter[],
+	newsletters: NewsletterResponse[],
 ): void => {
 	console.log({ versionNumber });
-	console.log('INDEX\tVALID\tCurrent\t CANCELLED\tNAME');
+	console.log('INDEX\tCANCELLED\tNAME');
 	newsletters.forEach((newsletter, index) => {
 		console.log(
 			index,
 			'\t',
-			EmailNewsletterType.is(newsletter) ||
-				CancelledEmailNewsletterType.is(newsletter),
-			'\t',
-			EmailNewsletterType.is(newsletter),
-			'\t',
 			CancelledEmailNewsletterType.is(newsletter),
-			'\t\t',
+			'\t',
 			newsletter.name,
 		);
 	});
 };
 
-const getEmailNewslettersFromLocalCsv = async (
-	config: {
-		includeCancelled?: boolean;
-	} = {},
-): Promise<EmailNewsletter[]> => {
-	const csvData = await readFileSync(
-		PREVIEW_DATA_SOURCE_FILE_PATH,
-	).toString();
+const getEmailNewslettersFromLocalCsv = async (): Promise<
+	NewsletterResponse[]
+> => {
+	const csvData = readFileSync(PREVIEW_DATA_SOURCE_FILE_PATH).toString();
 	const cellsInRows = parseStringifiedCSV(csvData);
-	// rowToNewsletter casts its results as EmailNewsletter, but doesn't validate
-	// the values - this is done later by EmailNewsletter.is
-	const unvalidatedNewsletters = cellsInRows.slice(1).map(rowToNewsletter);
+
+	// getNewsletterFromRowData casts its results as EmailNewsletter, but doesn't validate
+	// the values - this is done later by the `is` function
+	const newsletters = cellsInRows.slice(1).map(getNewsletterFromRowData);
 
 	// The spreadsheet only fills the 'group' and 'theme' column when they change
 	// so the values need to be filled from the last non-empty value from a previous
 	// row.
 	// If the first row of data does not have these columns populated, the first
-	// group will have empty values, so will fail the EmailNewsletter.is test
-	let lastGroup = '';
-	let lastTheme = '';
+	// group will have empty values, so will fail the `is` test
+	const addGroupAndThemeReducer = (
+		result: BaseNewsletter[],
+		curr: BaseNewsletter,
+	): BaseNewsletter[] => {
+		// Extract previous result to use as default values for group/theme
+		const prev = result.length ? result[result.length - 1] : curr;
 
-	unvalidatedNewsletters.forEach((newsletter) => {
-		if (newsletter.group) {
-			lastGroup = newsletter.group;
-		} else {
-			newsletter.group = lastGroup as NonEmptyString;
-		}
-		if (newsletter.theme) {
-			lastTheme = newsletter.theme;
-		} else {
-			newsletter.theme = lastTheme as NonEmptyString;
-		}
-	});
+		return [
+			...result,
+			{
+				...curr,
+				group: curr?.group || prev?.group,
+				theme: curr?.theme || prev?.theme,
+			},
+		];
+	};
 
-	logFeedback(cellsInRows[0][0], unvalidatedNewsletters);
+	const validatedNewsletters = newsletters
+		.reduce(addGroupAndThemeReducer, [])
+		.filter(Boolean)
+		.map(validateNewsletter)
+		.filter(NewsletterResponseValidator.is);
 
-	const includeInData = config.includeCancelled
-		? (_: unknown): boolean =>
-				EmailNewsletterType.is(_) || CancelledEmailNewsletterType.is(_)
-		: EmailNewsletterType.is;
+	logFeedback(cellsInRows[0][0], validatedNewsletters);
 
-	return unvalidatedNewsletters.filter(includeInData);
+	return validatedNewsletters;
 };
 
 const writePreviewJson = async (): Promise<void> => {
@@ -86,10 +84,10 @@ const writePreviewJson = async (): Promise<void> => {
 	);
 	const data = USE_CODE_DATA
 		? await getEmailNewsletters()
-		: await getEmailNewslettersFromLocalCsv({ includeCancelled: false });
+		: await getEmailNewslettersFromLocalCsv();
 	const dataString = JSON.stringify(data);
 
-	await writeFileSync(PREVIEW_OUTPUT_FILE_PATH, dataString);
+	writeFileSync(PREVIEW_OUTPUT_FILE_PATH, dataString);
 };
 
 writePreviewJson();

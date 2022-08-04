@@ -2,7 +2,7 @@ import * as t from 'io-ts';
 import { optional } from 'io-ts-extra';
 import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 
-const NewsletterIllustrationType = t.type({
+const NewsletterIllustrationValidator = t.type({
 	circle: t.string,
 });
 
@@ -16,7 +16,7 @@ const baseEmailEmbedModel = {
 	imageUrl: optional(t.string), //deprecated
 };
 
-const EmailEmbedType = t.type({
+const EmailEmbedValidator = t.type({
 	...baseEmailEmbedModel,
 });
 
@@ -27,7 +27,7 @@ const EmailEmbedType = t.type({
 // is required  as a NonEmptyString on an EmailNewsletter.
 // Consequently, EmailEmbed.description will always be a
 // NonEmptyString for a (non-cancelled) EmailNewsletter.
-const EmailEmbedWithDescriptionType = t.type({
+const EmailEmbedWithDescriptionValidator = t.type({
 	...baseEmailEmbedModel,
 	description: NonEmptyString,
 });
@@ -46,38 +46,40 @@ const baseNewsletterModel = {
 	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: optional(t.string),
 	brazeNewsletterName: optional(t.string),
-	emailEmbed: EmailEmbedType,
+	emailEmbed: EmailEmbedValidator,
 	restricted: t.boolean,
 	paused: t.boolean,
 	emailConfirmation: t.boolean,
 	signupPage: optional(t.string),
 	exampleUrl: optional(t.string),
-	illustration: optional(NewsletterIllustrationType),
+	illustration: optional(NewsletterIllustrationValidator),
 	campaignName: optional(t.string),
 	campaignCode: optional(t.string),
 };
 
-export const CancelledEmailNewsletterType = t.type({
+export const BaseNewsletterValidator = t.type({ ...baseNewsletterModel });
+export type BaseNewsletter = t.TypeOf<typeof BaseNewsletterValidator>;
+
+export type NewsletterIllustration = t.TypeOf<
+	typeof NewsletterIllustrationValidator
+>;
+
+// See corresponding scala definition in the frontend project
+// https://github.com/guardian/frontend/blob/c70a2d5d1a1374e0de0e9cf408116c7b76569bd0/common/app/services/newsletters/model/NewsletterResponse.scala
+export const NewsletterResponseValidator = t.type({
 	...baseNewsletterModel,
-	cancelled: t.literal(true),
-});
-export const EmailNewsletterType = t.type({
-	...baseNewsletterModel,
-	cancelled: t.literal(false),
 	description: NonEmptyString,
 	frequency: NonEmptyString,
 	brazeSubscribeAttributeName: NonEmptyString,
 	brazeSubscribeAttributeNameAlternate: optional(t.array(t.string)),
 	brazeSubscribeEventNamePrefix: NonEmptyString,
 	brazeNewsletterName: NonEmptyString,
-	emailEmbed: EmailEmbedWithDescriptionType,
+	emailEmbed: EmailEmbedWithDescriptionValidator,
+	cancelled: t.boolean,
 });
+export type NewsletterResponse = t.TypeOf<typeof NewsletterResponseValidator>;
 
-export type EmailNewsletter = t.TypeOf<typeof EmailNewsletterType>;
-export type CancelledEmailNewsletter = t.TypeOf<
-	typeof CancelledEmailNewsletterType
->;
-
-export type NewsletterIllustration = t.TypeOf<
-	typeof NewsletterIllustrationType
->;
+export const CancelledEmailNewsletterType = t.type({
+	...baseNewsletterModel,
+	cancelled: t.literal(true),
+});

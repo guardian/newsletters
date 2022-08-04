@@ -35,7 +35,6 @@ const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 				data.sheets[0] &&
 				data.sheets[0].data &&
 				data.sheets[0].data[0] &&
-				data.sheets[0].data[0].rowData &&
 				data.sheets[0].data[0].rowData,
 			'No data retrieved from spreadsheet',
 		);
@@ -55,7 +54,7 @@ const readNewslettersSheet = async (): Promise<sheetsV4.Schema$RowData[]> => {
 	}
 };
 
-const isDataRow = ({ values }: sheetsV4.Schema$RowData): boolean =>
+const isNonEmptyRow = ({ values }: sheetsV4.Schema$RowData): boolean =>
 	!!values && !!values[1].formattedValue;
 
 const formatPreviewLinks = (
@@ -88,7 +87,7 @@ const prepareRows = (rows: sheetsV4.Schema$RowData[]): string[][] => {
 
 	return rows
 		.slice(dataStartRow)
-		.filter(isDataRow)
+		.filter(isNonEmptyRow)
 		.map(
 			({ values }) =>
 				values
