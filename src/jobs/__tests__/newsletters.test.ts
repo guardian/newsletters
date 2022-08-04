@@ -3,7 +3,7 @@ import { replaceLastSpaceByNonBreakingSpace } from '../../util';
 import { getEmailNewsletters } from '../newsletters';
 
 const FREQUENCY_INDEX = 5;
-const CANCELLED_INDEX = 17;
+const CANCELLED_INDEX = 18;
 
 const EXPECTED_RESULTS = [
 	{
@@ -17,6 +17,7 @@ const EXPECTED_RESULTS = [
 		group: 'Features',
 		description:
 			'Journalism that uncovers real solutions: people, movements and innovations offering answers to our most pressing problems. We’ll round up the best articles for you every week.',
+		regionFocus: 'UK Focused',
 		frequency: 'Weekly',
 		listIdV1: -1,
 		listId: 4205,
@@ -58,6 +59,7 @@ const VALID_NEWSLETTER_ENTRY = [
 	'The Upside',
 	'Weekly', // 5 Frequency
 	'Journalism that uncovers real solutions: people, movements and innovations offering answers to our most pressing problems. We’ll round up the best articles for you every week.',
+	'UK Focused',
 	'the-upside',
 	'-1',
 	'4205',

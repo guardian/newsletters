@@ -42,9 +42,12 @@ graph TD
     Fastly-- reads JSON file from ---S3
 ```
 
-### sheet changelog
+### sheet changelog (Version in cell A1)
 
-Version in cell A1
+#### 0.8
+
+Column added:
+* G: regionFocus
 
 #### 0.7
 
