@@ -1,13 +1,21 @@
 import { strict as assert } from 'assert';
+import { fold, isRight } from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/lib/function';
+import * as t from 'io-ts';
+import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
 import {
 	prepareRows,
 	readNewslettersSheet,
 } from '../lib/googleNewsletterSheets';
-import {
-	EmailNewsletter,
-	EmailNewsletterType,
+import type {
+	BaseNewsletter,
 	NewsletterIllustration,
+	NewsletterResponse,
+} from '../models/newsletters';
+import {
+	BaseNewsletterValidator,
+	NewsletterResponseValidator,
 } from '../models/newsletters';
 import {
 	getBrazeAttributeName,
@@ -25,40 +33,42 @@ const getIllustration = (
 const isTrue = (str: string | undefined): boolean =>
 	str !== undefined ? str.toLowerCase() === 'true' : false;
 
-const rowToNewsletter = ({
-	[THEME_INDEX]: theme,
-	// column 2 ("name") is not used.
-	[GROUP_INDEX]: group,
-	3: name, // column headding on the sheet is "Displayed Name"
-	4: frequency,
-	5: description,
-	6: regionFocus,
-	7: identityName,
-	8: listIdV1,
-	9: listId,
-	10: brazeSubscribeEventNamePrefix,
-	11: brazeNewsletterName,
-	12: brazeSubscribeAttributeName,
-	13: brazeSubscribeAttributeNameAlternate,
-	14: campaignName,
-	15: campaignCode,
-	16: restricted,
-	17: paused,
-	18: cancelled,
-	19: emailConfirmation,
-	[PREVIEW_INDEX]: exampleUrl,
-	21: signupPage,
-	22: mailName,
-	23: mailTitle,
-	24: mailDescription,
-	25: mailSuccessDescription,
-	26: mailHexCode,
-	27: mailImageUrl,
-	28: illustration,
-}: string[]): EmailNewsletter =>
-	({
-		identityName,
-		name,
+const getNewsletterFromRowData = (rowData: string[]): BaseNewsletter => {
+	const {
+		[THEME_INDEX]: theme,
+		// column 2 ("name") is not used.
+		[GROUP_INDEX]: group,
+		3: name, // column headding on the sheet is "Displayed Name"
+		4: frequency,
+		5: description,
+		6: regionFocus,
+		7: identityName,
+		8: listIdV1,
+		9: listId,
+		10: brazeSubscribeEventNamePrefix,
+		11: brazeNewsletterName,
+		12: brazeSubscribeAttributeName,
+		13: brazeSubscribeAttributeNameAlternate,
+		14: campaignName,
+		15: campaignCode,
+		16: restricted,
+		17: paused,
+		18: cancelled,
+		19: emailConfirmation,
+		[PREVIEW_INDEX]: exampleUrl,
+		21: signupPage,
+		22: mailName,
+		23: mailTitle,
+		24: mailDescription,
+		25: mailSuccessDescription,
+		26: mailHexCode,
+		27: mailImageUrl,
+		28: illustration,
+	} = rowData;
+
+	return {
+		identityName: identityName as NonEmptyString,
+		name: name as NonEmptyString,
 		cancelled: isTrue(cancelled),
 		restricted: isTrue(restricted),
 		paused: isTrue(paused),
@@ -68,9 +78,9 @@ const rowToNewsletter = ({
 			brazeSubscribeAttributeName ||
 			getBrazeAttributeName(brazeSubscribeEventNamePrefix),
 		brazeSubscribeEventNamePrefix,
-		theme: theme?.toLowerCase(),
-		group,
-		description,
+		theme: theme?.toLowerCase() as NonEmptyString,
+		group: group as NonEmptyString,
+		description: description,
 		regionFocus,
 		frequency,
 		listIdV1: parseInt(listIdV1),
@@ -78,17 +88,17 @@ const rowToNewsletter = ({
 		exampleUrl,
 		signupPage: removeSitePrefix(signupPage),
 		emailEmbed: {
-			name: mailName || name,
+			name: (mailName || name) as NonEmptyString,
 			title: replaceLastSpaceByNonBreakingSpace(
 				mailTitle || `Sign up for ${mailName || name}`,
-			),
+			) as NonEmptyString,
 			description: mailDescription ? mailDescription : description,
-			successHeadline: isTrue(emailConfirmation)
+			successHeadline: (isTrue(emailConfirmation)
 				? 'Check your email inbox and confirm your subscription'
-				: 'Subscription confirmed',
-			successDescription:
-				mailSuccessDescription || 'Thanks for subscribing!',
-			hexCode: mailHexCode || '#DCDCDC',
+				: 'Subscription confirmed') as NonEmptyString,
+			successDescription: (mailSuccessDescription ||
+				'Thanks for subscribing!') as NonEmptyString,
+			hexCode: (mailHexCode || '#DCDCDC') as NonEmptyString,
 			imageUrl: mailImageUrl?.length > 0 ? mailImageUrl : undefined,
 		},
 		illustration: getIllustration(illustration),
@@ -100,16 +110,79 @@ const rowToNewsletter = ({
 			brazeSubscribeAttributeNameAlternate
 				?.split(',')
 				?.map((a) => a.trim()),
-	} as EmailNewsletter);
+	};
+};
 
-const getEmailNewsletters = async (): Promise<EmailNewsletter[]> => {
+const validateNewsletter = (
+	newsletter: BaseNewsletter,
+): BaseNewsletter | undefined => {
+	// Failure scenario: console log the errors and return undefined
+	const onLeft = (errors: t.Errors): undefined => {
+		console.log(`Could not decode newsletter: ${newsletter.name}`);
+		console.log(
+			errors.map((error: t.ValidationError) =>
+				error.context.map(({ key }) => key).join('.'),
+			),
+		);
+		return undefined;
+	};
+
+	// Success scenario: return validated newsletter
+	const onRight = (newsletter: BaseNewsletter): BaseNewsletter => newsletter;
+
+	return pipe(
+		BaseNewsletterValidator.decode(newsletter),
+		fold(onLeft, onRight),
+	);
+};
+
+/**
+ * Identity API requires some values on the newsletter object to be present.
+ * Those values are not required in the spreadsheet for cancelled newsletters, so we apply default values here.
+ * @param newsletter the newsletter to apply default values to
+ * @returns a copy of `newsletter`
+ */
+function setDefaultValues(newsletter: BaseNewsletter): BaseNewsletter {
+	const valueOrDefault = (value: string | null | undefined): string => {
+		const defaultValue = 'cancelled';
+		return value ?? defaultValue;
+	};
+
+	return {
+		...newsletter,
+		description: valueOrDefault(newsletter.description),
+		frequency: valueOrDefault(newsletter.frequency),
+		brazeSubscribeAttributeName: valueOrDefault(
+			newsletter.brazeSubscribeAttributeName,
+		),
+		brazeNewsletterName: valueOrDefault(newsletter.brazeNewsletterName),
+		brazeSubscribeEventNamePrefix: valueOrDefault(
+			newsletter.brazeSubscribeEventNamePrefix,
+		),
+		emailEmbed: {
+			...newsletter.emailEmbed,
+			description: valueOrDefault(newsletter.emailEmbed.description),
+		},
+	};
+}
+
+const getEmailNewsletters = async (): Promise<NewsletterResponse[]> => {
 	const rows = await readNewslettersSheet();
-	const newsletters = prepareRows(rows)
-		.map(rowToNewsletter)
-		.filter(EmailNewsletterType.is);
+	const newsletterObjects = prepareRows(rows)
+		.map((row) => getNewsletterFromRowData(row))
+		.map((newsletter) => validateNewsletter(newsletter))
+		.filter(BaseNewsletterValidator.is);
+
+	const newsletters = newsletterObjects
+		.map((newsletter) =>
+			newsletter.cancelled ? setDefaultValues(newsletter) : newsletter,
+		)
+		.map(NewsletterResponseValidator.decode)
+		.filter(isRight)
+		.map((_) => _.right);
 
 	assert.ok(!!newsletters.length, 'No newsletters processed!');
 	return newsletters;
 };
 
-export { getEmailNewsletters, rowToNewsletter };
+export { getEmailNewsletters, validateNewsletter, getNewsletterFromRowData };
