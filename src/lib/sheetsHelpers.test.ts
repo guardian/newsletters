@@ -53,7 +53,7 @@ const rows = [
 
 describe('prepare rows', () => {
 	const expectedResults = [
-		['theme for rows 1 and 2', ...middleResults, '18', '19'],
+		['theme for rows 1 and 2', ...middleResults, '18', '19', undefined],
 		[
 			'theme for rows 1 and 2',
 			...middleResults,
