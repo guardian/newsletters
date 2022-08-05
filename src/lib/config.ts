@@ -5,8 +5,8 @@ import {
 	SharedIniFileCredentials,
 } from 'aws-sdk/lib/core';
 
-const Stage = process.env.STAGE ?? 'CODE';
-const Path = `/${Stage}/newsletters/newsletters-source`;
+const stage = process.env.STAGE ?? 'CODE';
+const path = `/${stage}/newsletters/newsletters-source`;
 type Config = { [key: string]: string };
 
 const ssm: SSM = new SSM({
@@ -26,13 +26,14 @@ async function fetchConfig(): Promise<Config> {
 
 		const awsParameters = await ssm
 			.getParametersByPath({
-				Path,
+				Path: path,
 				WithDecryption: true,
 			})
 			.promise();
+
 		for (const parameter of awsParameters.Parameters ?? []) {
 			if (parameter.Name && parameter.Value) {
-				const name = parameter.Name.replace(`${Path}/`, '');
+				const name = parameter.Name.replace(`${path}/`, '');
 				state[name] = parameter.Value;
 			}
 		}
@@ -49,7 +50,7 @@ export async function getConfigItem(key: string): Promise<string> {
 		if (config[key]) {
 			return config[key];
 		} else {
-			throw new Error(`No config value for key: ${Path}/${key}`);
+			throw new Error(`No config value for key: ${path}/${key}`);
 		}
 	} catch (err) {
 		throw new Error(`Error retrieving AWS config: ${err}`);

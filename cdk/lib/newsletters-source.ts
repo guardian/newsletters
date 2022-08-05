@@ -27,7 +27,7 @@ export class NewslettersSource extends GuStack {
 			runtime: Runtime.NODEJS_16_X,
 			functionName: `${stack}-${app}-${stage}`,
 			memorySize: 512,
-			handler: 'cron.handler',
+			handler: 'index.handler',
 			fileName: `${app}.zip`,
 			monitoringConfiguration: {
 				/*

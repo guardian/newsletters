@@ -1,5 +1,6 @@
-import * as mock from '../../lib/googleNewsletterSheets';
-import { replaceLastSpaceByNonBreakingSpace } from '../../util';
+import * as mock from '../../lib/getGoogleSheetsData';
+import * as mockHelpers from '../../lib/sheetsHelpers';
+import { replaceLastSpaceWithNonBreakingSpace } from '../../util';
 import { getEmailNewsletters } from '../newsletters';
 
 const FREQUENCY_INDEX = 5;
@@ -24,7 +25,7 @@ const EXPECTED_RESULT = {
 	restricted: false,
 	emailEmbed: {
 		name: 'Email name, if not present default to name',
-		title: replaceLastSpaceByNonBreakingSpace(
+		title: replaceLastSpaceWithNonBreakingSpace(
 			'Email title, if not present default Sign up for + title',
 		),
 		description:
@@ -106,7 +107,7 @@ describe('Newsletters service', () => {
 	describe('getEmailNewsletters', () => {
 		it('returns expected result for standard entry', async () => {
 			const mockResponse = [VALID_NEWSLETTER_ENTRY];
-			jest.spyOn(mock, 'prepareRows').mockImplementation(
+			jest.spyOn(mockHelpers, 'prepareRows').mockImplementation(
 				() => mockResponse,
 			);
 
@@ -122,7 +123,7 @@ describe('Newsletters service', () => {
 				NEWSLETTER_ENTRY_WITH_MISSING_FREQUENCY,
 			];
 
-			jest.spyOn(mock, 'prepareRows').mockImplementation(
+			jest.spyOn(mockHelpers, 'prepareRows').mockImplementation(
 				() => mockResponse,
 			);
 
@@ -141,7 +142,7 @@ describe('Newsletters service', () => {
 				cancelled: true,
 			});
 
-			jest.spyOn(mock, 'prepareRows').mockImplementation(
+			jest.spyOn(mockHelpers, 'prepareRows').mockImplementation(
 				() => mockResponse,
 			);
 

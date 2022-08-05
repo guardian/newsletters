@@ -4,10 +4,8 @@ import { pipe } from 'fp-ts/lib/function';
 import * as t from 'io-ts';
 import { NonEmptyString } from 'io-ts-types/lib/NonEmptyString';
 import { GROUP_INDEX, PREVIEW_INDEX, THEME_INDEX } from '../constants';
-import {
-	prepareRows,
-	readNewslettersSheet,
-} from '../lib/googleNewsletterSheets';
+import { readNewslettersSheet } from '../lib/getGoogleSheetsData';
+import { prepareRows } from '../lib/sheetsHelpers';
 import type {
 	BaseNewsletter,
 	NewsletterIllustration,
@@ -20,7 +18,7 @@ import {
 import {
 	getBrazeAttributeName,
 	removeSitePrefix,
-	replaceLastSpaceByNonBreakingSpace,
+	replaceLastSpaceWithNonBreakingSpace,
 } from '../util';
 
 const getIllustration = (
@@ -87,7 +85,7 @@ const getNewsletterFromRowData = (rowData: string[]): BaseNewsletter => {
 		signupPage: removeSitePrefix(signupPage),
 		emailEmbed: {
 			name: (mailName || name) as NonEmptyString,
-			title: replaceLastSpaceByNonBreakingSpace(
+			title: replaceLastSpaceWithNonBreakingSpace(
 				mailTitle || `Sign up for ${mailName || name}`,
 			) as NonEmptyString,
 			description: mailDescription ? mailDescription : description,

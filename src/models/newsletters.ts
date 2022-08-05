@@ -20,13 +20,14 @@ const EmailEmbedValidator = t.type({
 	...baseEmailEmbedModel,
 });
 
-// The parser sets the value of EmailEmbed.description using the
-// "mailDescription" column or the  "description"  column if
-// "mailDescription" is empty.
-// "Description" is optional on a CancelledEmailNewsletter, but
-// is required  as a NonEmptyString on an EmailNewsletter.
-// Consequently, EmailEmbed.description will always be a
-// NonEmptyString for a (non-cancelled) EmailNewsletter.
+/** The parser sets the value of EmailEmbed.description using the
+ * "mailDescription" column or the  "description"  column if
+ * "mailDescription" is empty.
+ * "Description" is optional on a CancelledEmailNewsletter, but
+ * is required  as a NonEmptyString on an EmailNewsletter.
+ * Consequently, EmailEmbed.description will always be a
+ * NonEmptyString for a (non-cancelled) EmailNewsletter.
+ */
 const EmailEmbedWithDescriptionValidator = t.type({
 	...baseEmailEmbedModel,
 	description: NonEmptyString,

@@ -6,8 +6,9 @@
   "author": "The Guardian",
   "license": "MIT",
   "private": true,
+  "main": "src/index.ts",
   "scripts": {
-    "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/cron.ts",
+    "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/index.ts",
     "preview": "ts-node-dev --transpile-only preview/index.ts",
     "preview-code-data": "USE_CODE_DATA=TRUE STAGE=CODE ts-node-dev --transpile-only preview/index.ts",
     "build": "tsc",
