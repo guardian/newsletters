@@ -39,6 +39,7 @@ const baseNewsletterModel = {
 	theme: NonEmptyString,
 	group: NonEmptyString,
 	description: optional(t.string),
+	regionFocus: optional(t.string),
 	frequency: optional(t.string),
 	listId: t.number,
 	listIdV1: t.number,

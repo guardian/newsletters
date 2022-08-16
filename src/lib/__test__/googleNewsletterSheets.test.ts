@@ -24,6 +24,7 @@ describe('prepare rows', () => {
 				'17',
 				'18',
 				'19',
+				'20',
 				undefined,
 			],
 			[
@@ -46,6 +47,7 @@ describe('prepare rows', () => {
 				'17',
 				'18',
 				'19',
+				'20',
 				'value for preview column, not formatted in red, should not be filtered out',
 			],
 			[
@@ -110,6 +112,7 @@ describe('prepare rows', () => {
 					{ formattedValue: '17' },
 					{ formattedValue: '18' },
 					{ formattedValue: '19' },
+					{ formattedValue: '20' },
 					{
 						formattedValue:
 							'value for preview column formatted red, which should be filtered out and replaced with undefined',
@@ -140,6 +143,7 @@ describe('prepare rows', () => {
 					{ formattedValue: '17' },
 					{ formattedValue: '18' },
 					{ formattedValue: '19' },
+					{ formattedValue: '20' },
 					{
 						formattedValue:
 							'value for preview column, not formatted in red, should not be filtered out',

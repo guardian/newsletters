@@ -1,8 +1,8 @@
 const NEWSLETTERS_BUCKET_NAME = 'aws-frontend-newsletters-source';
-const SHEET_VERSION = '0.7';
+const SHEET_VERSION = '0.8';
 const SHEET_NAME = 'Emails';
-const SHEET_RANGE = 'A:AH';
-const PREVIEW_INDEX = 19;
+const SHEET_RANGE = 'A:AI';
+const PREVIEW_INDEX = 20;
 const GROUP_INDEX = 2;
 const THEME_INDEX = 0;
 
