@@ -1,6 +1,6 @@
 # Newsletters
 
-This is the Newsletter API service. The service is an AWS scheduled lambda, that runs every 5 minutes and:
+This is the Newsletters service. The service is an AWS scheduled lambda, that runs every 5 minutes and:
 1. reads newsletter data from the Google spreadsheet (you can find the CODE version here: https://docs.google.com/spreadsheets/d/1_eN5NTcWOUyLLLKUJmrGZMlz1l4Zt4taTUFxD-2Bl_k/edit#gid=0)
 2. validates this data and uploads it to an S3 bucket
 
@@ -42,60 +42,14 @@ graph TD
     Fastly-- reads JSON file from ---S3
 ```
 
-### sheet changelog (Version in cell A1)
+## API Documentation
 
-#### 0.8
-
-Column added:
-* G: regionFocus
-
-#### 0.7
-
-Column added:
-* R: cancelled
-
-#### 0.3
-
-Column added:
-
-* AD: campaignName
-* AE: campaignCode
-
-#### 0.2
-
-Column added:
-
-* C: displayed name
-* D: restricted
-* H: displayed frequency
-* K: signup page
-* N: group
-* O: displayed theme
-* P: description
-* Q: listIdV1
-* R: listId
-* S: identity name
-* T: brazeSubscribeEventNamePrefix
-* U: brazeNewsletterName
-* V: brazeSubscribeAttributeName blank if can be derived from brazeSubscribeEventNamePrefix
-* W: mailName blank if same as name
-* X: mailTitle blank if can be derived from name
-* Y: mailDescription blank if same as description
-* Z: mailSuccessDescription
-* AA:: mailHexCode blank if default
-* AB: mailImageUrl
-* AC: illustration
-
-removed duplicate format column
-removed unused ophan column
-
-Added 2 newsletters:
-
-* The Rural Network
-* Australia's Modern Outback
+Please ensure the [open-api-spec](./open-api.yaml) is updated with all relevant changes
 
 ## Core technologies included
 
 * TypeScript
 * Node
 * Jest (testing library)
+
+## [Changelog](./CHANGELOG.md)
