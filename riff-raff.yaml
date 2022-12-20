@@ -16,6 +16,5 @@ deployments:
     type: aws-lambda
     dependencies: [cloudformation]
     parameters:
-      bucket: com-gu-frontend-artifacts
       fileName: newsletters-source.zip
       functionNames: [-newsletters-source-]
