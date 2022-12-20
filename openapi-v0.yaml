@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Newsletters API
   description: The source of truth for newsletters at The Guardian.
-  version: '0.8'
+  version: '1.0.0' # Version of the OpenAPI document, not the version of the API implementation
   contact:
     email: newsletters-dev@guardian.co.uk
 
@@ -47,57 +47,76 @@ components:
         identityName:
           type: string
           example: morning-briefing
+          description: Human-readable, unique identifier of the newsletter in kebab-case
         name:
           type: string
           example: First Edition
+          description: Name of the newsletter
         cancelled:
           type: boolean
           example: false
+          description: Indicates if the newsletter has been cancelled. This prevents it from being actively promoted across the site and prevents sign-ups and unsubscribes.
         restricted:
           type: boolean
           example: false
+          description: Indicates if the newsletter is restricted (e.g. not available to the public, requiring payment/subscription, or requiring a registered account).
         paused:
           type: boolean
           example: false
+          description: Indicates if the newsletter is paused (temporarily not running). This prevents it from being actively promoted across the site and prevents most sign-ups.
         emailConfirmation:
           type: boolean
           example: false
+          description: Indicates if the newsletter sign up process requires an email-confirmation step in order to subscribe.
         brazeNewsletterName:
           type: string
           example: Editorial_MorningBriefingUK
+          description: The newsletter name identifier used to create segments in Braze
         brazeSubscribeAttributeName:
           type: string
           example: MorningBriefingUk_Subscribe_Email
+          description: Used for custom attributes in Braze. Detemines whether a user is a subscriber to a newsletter or not.
         brazeSubscribeEventNamePrefix:
           type: string
           example: morning_briefing_uk
+          description: Used for custom events in Braze. Detemines whether a user is a subscriber to a newsletter or not.
         theme:
           type: string
           example: News
+          description: Describes the newsletter theme (similar to a pillar) which is a top level category.
         group:
           type: string
           example: News in brief
+          description: Describes the newsletter group. Used in the all newsletters page as a secondary level grouping to the theme.
         description:
           type: string
           example: Archie Bland and Nimo Omer take you through the top stories and what they mean, free every weekday morning
+          description: Provides a short description of the newsletter for promotion across the site.
         regionFocus:
           type: string
           example: UK
+          description: Indicates whether the newsletter content is tailored towards a particular region.
         frequency:
           type: string
           example: Every weekday
+          description: Indicates how often the newsletter is sent out.
         listIdV1:
           type: integer
           example: 3640
+          description: A legacy, numerical unique identifier. Is not widely used but some usage still exists.
+          deprecated: true
         listId:
           type: integer
           example: 4156
+          description: A numerical unique identifier for a newsletter.
         exampleUrl:
           type: string
           example: https://www.theguardian.com/world/series/guardian-morning-briefing/latest/email
+          description: A URL for dynamically previewing newsletter content. Will only work for newsletters which exist fully on web.
         signupPage:
           type: string
           example: https://www.theguardian.com/global/2022/sep/20/sign-up-for-the-first-edition-newsletter-our-free-news-email
+          description: A URL pointing to the individual sign up for the newsletter.
         illustration:
           $ref: '#/components/schemas/NewsletterIllustration'
         emailEmbed:
@@ -105,22 +124,28 @@ components:
         campaignName:
           type: string
           example: MorningBriefingUK
+          description: The Ophan campaign name specified in Braze to link click-throughs from newsletters to the original source.
         campaignCode:
           type: string
           example: morningbriefinguk_email
+          description: The Ophan campaign code specified in Braze to link click-throughs from newsletters to the original source.
         brazeSubscribeAttributeNameAlternative:
           type: array
           items:
             type: string
             example: email_subscribe_morning_briefing_uk
+          description: A list of previous Braze attribute names which can be used if the main attribute name does not match.
     NewsletterIllustration:
       type: object
       required:
         - circle
+      deprecated: true
       properties:
         circle:
           type: string
-          example:
+          example: https://media.guim.co.uk/c1ba2b4e07f8c982de60dba4b8d93dc77965c198/0_0_202_202/202.png
+          description: Legacy circular image used in newsletter promotion. Not currently used.
+          deprecated: true
     EmailEmbed:
       type: object
       required:
@@ -133,20 +158,33 @@ components:
         name:
           type: string
           example: First Edition
+          description: The newsletter name as it should appear in promotional sign-up forms.
+          deprecated: true
         title:
           type: string
           example: Sign up for First Edition
+          description: The title to appear at the top of the promotional sign-up form block.
+          deprecated: true
         description:
           type: string
           example: Our morning email breaks down the key stories of the day, telling you what’s happening and why it matters
+          description: A short description of the newsletter to be used specifically in promotional sign-up forms.
+          deprecated: true
         successHeadline:
           type: string
           example: Subscription confirmed
+          description: A short success message headline to appear after successfully signing up to the newsletter.
         successDescription:
           type: string
           example: We'll send you First Edition every weekday
+          description: A short success message description to appear after successfully signing up to the newsletter.
         hexCode:
           type: string
           example: '#DCDCDC'
+          description: Colour hex code to control the colours used for old email embeds.
+          deprecated: true
         imageUrl:
           type: string
+          example: https://media.guim.co.uk/c1ba2b4e07f8c982de60dba4b8d93dc77965c198/0_0_202_202/202.png
+          description: Legacy image associated with the newsletter, used in promotional sign up forms.
+          deprecated: true
