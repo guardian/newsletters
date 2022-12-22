@@ -17,6 +17,9 @@ jobs:
           aws-region: eu-west-1
       - uses: guardian/actions-setup-node@main
 
+      - name: Go to v0 directory
+        run: cd v0
+
       - name: Install
         run: yarn
 
