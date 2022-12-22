@@ -1,6 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+cd v0
 yarn prettier
 yarn lint
 yarn tsc
