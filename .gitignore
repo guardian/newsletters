@@ -1,29 +1,29 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 
 # testing
-/coverage
+**/coverage
 
 # production
-/dist
+**/dist
 
 # misc
 .DS_Store
 *.pem
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
 
 # local env files
 .env
 
-cloudformation.yaml
-cdk.out/
+**/cloudformation.yaml
+**/cdk.out/
 
-preview/preview.json
+**/preview/preview.json

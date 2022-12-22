@@ -1,53 +1,14 @@
 {
-  "name": "newsletters",
-  "version": "0.1.0",
-  "description": "Provides an api to serve as the source of truth for newsletters at the Guardian",
-  "repository": "https://github.com/guardian/newsletters.git",
-  "author": "The Guardian",
-  "license": "MIT",
-  "private": true,
-  "scripts": {
-    "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/cron.ts",
-    "preview": "ts-node-dev --transpile-only preview/index.ts",
-    "preview-code-data": "USE_CODE_DATA=TRUE STAGE=CODE ts-node-dev --transpile-only preview/index.ts",
-    "build": "tsc",
-    "lint": "eslint src preview --ext .js,.jsx,.ts,.tsx",
-    "tsc": "tsc",
-    "prebuild": "rm -rf dist",
-    "postbuild": "./bin/package.sh",
-    "prettier": "prettier --check src preview",
-    "prettier:fix": "prettier --write src preview",
-    "prepare": "husky install",
-    "test": "jest src preview",
-    "upload-artifact": "node-riffraff-artifact"
-  },
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.42.0",
-    "googleapis": "^88.2.0",
-    "io-ts": "^2.2.16",
-    "io-ts-extra": "^0.11.6",
-    "io-ts-types": "^0.5.16"
-  },
-  "devDependencies": {
-    "@aws-cdk/aws-lambda": "^1.21.0",
-    "@guardian/eslint-config": "^0.7.0",
-    "@guardian/node-riffraff-artifact": "^0.3.2",
-    "@guardian/prettier": "^0.7.0",
-    "@types/aws-lambda": "^8.10.85",
-    "@types/jest": "^27.0.2",
-    "@typescript-eslint/eslint-plugin": "^2.16.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "aws-sdk": "^2.604.0",
-    "eslint": "7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^7.0.0",
-    "jest": "^27.2.5",
-    "prettier": "2.4.1",
-    "ts-jest": "^27.0.5",
-    "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "4.7.4"
-  }
+	"name": "newsletters",
+	"version": "1.0.0",
+	"description": "Newsletters API",
+	"repository": "git@github.com:guardian/newsletters.git",
+	"private": true,
+	"scripts": {
+		"postinstall": "cd v0 && yarn install && cd ..",
+		"prepare": "husky install"
+	},
+	"devDependencies": {
+		"husky": "^8.0.2"
+	}
 }
