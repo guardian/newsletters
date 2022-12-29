@@ -6,6 +6,9 @@
   "author": "The Guardian",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "STAGE=DEVELOPMENT ts-node-dev --transpile-only src/cron.ts",
     "preview": "ts-node-dev --transpile-only preview/index.ts",
