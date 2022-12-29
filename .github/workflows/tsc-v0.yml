@@ -4,6 +4,9 @@ on:
 jobs:
   tsc:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./v0
     steps:
       - uses: actions/checkout@v2.3.4
         with:
@@ -11,7 +14,7 @@ jobs:
       - uses: guardian/actions-setup-node@main
 
       - name: Install
-        run: yarn --cwd v0
+        run: yarn
 
       - name: Typescript
-        run: yarn --cwd v0 tsc
+        run: yarn tsc
