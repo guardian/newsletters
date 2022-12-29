@@ -2,8 +2,8 @@
 
 # dependencies
 **/node_modules
-/.pnp
-.pnp.js
+**/.pnp
+**.pnp.js
 
 # testing
 **/coverage
@@ -12,8 +12,8 @@
 **/dist
 
 # misc
-.DS_Store
-*.pem
+**.DS_Store
+**.pem
 
 # debug
 **/npm-debug.log*
