@@ -2,6 +2,14 @@
 
 exports[`The NewslettersSource stack matches the snapshot 1`] = `
 Object {
+  "Metadata": Object {
+    "gu:cdk:constructs": Array [
+      "GuDistributionBucketParameter",
+      "GuScheduledLambda",
+      "GuLambdaErrorPercentageAlarm",
+    ],
+    "gu:cdk:version": "TEST",
+  },
   "Parameters": Object {
     "DistributionBucketName": Object {
       "Default": "/account/services/artifact.bucket",
@@ -38,7 +46,7 @@ Object {
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs18.x",
         "Tags": Array [
           Object {
             "Key": "App",
@@ -274,7 +282,7 @@ Object {
                       Object {
                         "Ref": "DistributionBucketName",
                       },
-                      "/*",
+                      "/newsletters/TEST/newsletters-source/newsletters-source.zip",
                     ],
                   ],
                 },

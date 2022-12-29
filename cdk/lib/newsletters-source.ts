@@ -24,7 +24,7 @@ export class NewslettersSource extends GuStack {
 
 		new GuScheduledLambda(this, `${app}-lambda`, {
 			app,
-			runtime: Runtime.NODEJS_16_X,
+			runtime: Runtime.NODEJS_18_X,
 			functionName: `${stack}-${app}-${stage}`,
 			memorySize: 512,
 			handler: 'cron.handler',
