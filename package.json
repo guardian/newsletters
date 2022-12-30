@@ -5,7 +5,7 @@
 	"repository": "git@github.com:guardian/newsletters.git",
 	"private": true,
 	"scripts": {
-		"postinstall": "yarn --cwd v0",
+		"postinstall": "yarn --cwd v0 && yarn --cwd v1",
 		"prepare": "husky install"
 	},
 	"devDependencies": {

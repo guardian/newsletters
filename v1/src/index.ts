@@ -1,15 +1,15 @@
 import Fastify from 'fastify';
-import { newslettersRouter } from './routes/newsletter';
+import { routes as newsletterRoutes } from './routes/newsletter';
 
-const fastify = Fastify({
+const app = Fastify({
 	logger: true,
 });
 
-fastify.register(newslettersRouter, { prefix: '/v1/newsletters' });
+app.register(newsletterRoutes, { prefix: '/v1/newsletters' });
 
-fastify.listen({ port: 3000 }, function (err, address) {
+app.listen({ port: 8080 }, (err, address) => {
 	if (err) {
-		fastify.log.error(err);
+		console.error(err);
 		process.exit(1);
 	}
 });
