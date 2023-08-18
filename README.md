@@ -1,3 +1,5 @@
+# DEPRECATED - Newsletter data is now manage by  the [Newsletters-NX project](https://github.com/guardian/newsletters-nx)
+
 # Newsletters
 
 This is the Newsletters service. The service is an AWS scheduled lambda, that runs every 5 minutes and:
